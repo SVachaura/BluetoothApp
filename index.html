@@ -1,16 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VoiceApp alpha - for Android</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceApp Alpha</title>
 <style>
 :root {
-  --accent: #168bff;
-  --bg: #0b1020;
-  --card: #151d30;
-  --text: #f4f7ff;
-  --muted: #9ba9c2;
+  --accent: #1687ff;
+  --bg: #07101f;
+  --panel: #0d1b31;
+  --text: #f2f6ff;
+  --muted: #91a9cb;
+  --border: #203a5e;
 }
 * { box-sizing: border-box; }
 body {
@@ -21,259 +23,409 @@ body {
 }
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 22px 18px;
+  justify-content: space-between;
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
 }
-h1 { font-size: 22px; margin: 0; }
-small { color: var(--muted); }
-button { font: inherit; cursor: pointer; }
-.icon {
-  border: 0;
-  color: var(--text);
-  background: var(--card);
-  border-radius: 13px;
-  padding: 12px;
+.logo { font-size: 24px; font-weight: 800; }
+.logo span { color: var(--accent); }
+.version {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 5px;
 }
-main { padding: 0 18px 35px; max-width: 520px; margin: auto; }
+main {
+  max-width: 720px;
+  margin: auto;
+  padding: 16px;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
 .status {
-  text-align: center;
-  padding: 25px 12px;
-  background: var(--card);
-  border-radius: 23px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 14px;
 }
-.mic {
-  width: 100px;
-  height: 100px;
+.dot {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  border: 0;
-  background: var(--accent);
-  color: white;
-  font-size: 38px;
-  margin: 16px 0;
-  box-shadow: 0 0 35px color-mix(in srgb, var(--accent) 30%, transparent);
+  background: #73839b;
 }
+.dot.on { background: #24d69a; }
+h2 { font-size: 19px; margin: 0 0 15px; }
+p { color: var(--muted); line-height: 1.5; }
+button, select, input { font: inherit; }
+button {
+  cursor: pointer;
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: #132643;
+  border-radius: 12px;
+  padding: 13px 15px;
+}
+button:active { transform: scale(.98); }
 .primary {
   background: var(--accent);
   color: white;
   border: 0;
-  padding: 15px;
   width: 100%;
-  border-radius: 14px;
   font-weight: bold;
+  font-size: 17px;
+  padding: 17px;
+  margin-top: 17px;
 }
-h2 { font-size: 18px; margin: 26px 0 12px; }
-.effects {
+.small-button {
+  width: 100%;
+  margin-top: 12px;
+  background: transparent;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
-.effect {
-  background: var(--card);
-  border: 2px solid transparent;
-  color: var(--text);
-  border-radius: 16px;
+.voice {
   text-align: left;
-  padding: 15px;
+  min-height: 90px;
 }
-.effect.active { border-color: var(--accent); }
-.emoji { font-size: 27px; display: block; margin-bottom: 10px; }
-.effect small { display: block; margin-top: 5px; }
-.panel {
-  background: var(--card);
-  border-radius: 18px;
-  padding: 16px;
+.voice strong { display: block; margin-bottom: 8px; }
+.voice small { color: var(--muted); }
+.voice.selected {
+  border: 2px solid var(--accent);
+  background: #112d4d;
+}
+label {
+  display: block;
+  margin: 18px 0 9px;
+  font-size: 14px;
+}
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: #081529;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.setting-row button { padding: 9px 12px; }
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 12px;
 }
-input[type=range] { width: 100%; accent-color: var(--accent); }
-.colors {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-top: 15px;
+.color {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #ffffff40;
+  padding: 0;
 }
-.swatch {
-  width: 100%;
-  aspect-ratio: 1;
-  border: 3px solid transparent;
-  border-radius: 15px;
+.color.selected { outline: 3px solid white; }
+.note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 12px;
 }
-.swatch.selected { outline: 2px solid white; outline-offset: 2px; }
-.row { display:flex; justify-content:space-between; gap:10px; align-items:center; }
-.secondary {
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--text);
-  padding: 12px;
+#toast {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 18px;
+  max-width: 480px;
+  margin: auto;
+  padding: 14px;
+  background: #203653;
+  border: 1px solid var(--border);
   border-radius: 12px;
+  display: none;
+  z-index: 5;
 }
-.locked { opacity: .7; }
-footer { text-align:center; padding: 25px; color: var(--muted); font-size: 12px; }
-.page { display:none; }
-.page.active { display:block; }
-.notice { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.locked { opacity: .65; }
+footer {
+  text-align: center;
+  padding: 15px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (min-width: 560px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 </style>
 </head>
 <body>
 <header>
   <div>
-    <h1>VoiceApp</h1>
-    <small>alpha - for Android</small>
+    <div class="logo">Voice<span>App</span></div>
+    <div class="version">Alpha — for Android</div>
   </div>
-  <button class="icon" onclick="showPage('settings')" aria-label="Настройки">⚙️</button>
+  <button onclick="scrollToSettings()" aria-label="Настройки">⚙️</button>
 </header>
 
 <main>
-<section class="page active" id="home">
-  <div class="status">
-    <small id="state">● ГОЛОС ВЫКЛЮЧЕН</small><br>
-    <button class="mic" onclick="toggleVoice()" aria-label="Включить голос">🎙</button>
-    <h2 style="margin:0 0 8px">Изменение голоса</h2>
-    <p class="notice">Выбери эффект и попробуй его на своей записи.</p>
-    <button class="primary" id="toggle" onclick="toggleVoice()">ВКЛЮЧИТЬ</button>
-  </div>
-
-  <h2>Голосовые эффекты</h2>
-  <div class="effects" id="effects">
-    <button class="effect active" data-effect="normal" onclick="choose(this)">
-      <span class="emoji">🗣️</span>Обычный
-      <small>Без эффекта</small>
-    </button>
-    <button class="effect" data-effect="robot" onclick="choose(this)">
-      <span class="emoji">🤖</span>Робот
-      <small>Электронный голос</small>
-    </button>
-    <button class="effect" data-effect="deep" onclick="choose(this)">
-      <span class="emoji">🎙️</span>Глубокий
-      <small>Ниже тон</small>
-    </button>
-    <button class="effect" data-effect="chipmunk" onclick="choose(this)">
-      <span class="emoji">🐿️</span>Белка
-      <small>Выше тон</small>
-    </button>
-    <button class="effect" data-effect="alien" onclick="choose(this)">
-      <span class="emoji">👽</span>Инопланетянин
-      <small>Необычный звук</small>
-    </button>
-    <button class="effect" data-effect="demon" onclick="choose(this)">
-      <span class="emoji">👹</span>Демон
-      <small>Низкий и мрачный</small>
-    </button>
-  </div>
-
-  <h2>Настройка эффекта</h2>
-  <div class="panel">
-    <div class="row">
-      <label for="pitch">Высота голоса</label>
-      <span id="pitchValue">100%</span>
+  <section class="panel">
+    <div class="status">
+      <span class="dot" id="dot"></span>
+      <span id="statusText">Голос выключен</span>
     </div>
-    <input id="pitch" type="range" min="60" max="160" value="100"
-      oninput="pitchValue.textContent=this.value+'%'">
-    <p class="notice">В демоверсии настройка применяется к воспроизведению записи.</p>
-    <button class="secondary" onclick="document.getElementById('audioFile').click()">
-      📂 Выбрать свою запись
+    <p id="statusDescription">Выбери голос и нажми кнопку включения.</p>
+    <button class="primary" id="toggleButton" onclick="toggleVoice()">
+      ВКЛЮЧИТЬ
     </button>
-    <input id="audioFile" type="file" accept="audio/*" hidden onchange="loadAudio(this)">
-    <audio id="player" controls style="width:100%;margin-top:12px;display:none"></audio>
-  </div>
+    <div class="note">Демонстрационный переключатель. Микрофон не используется.</div>
+  </section>
 
-  <h2>Свои голоса</h2>
-  <div class="panel locked">
-    <div class="row">
-      <div>
-        <strong>🔒 Создание голосов</strong>
-        <p class="notice">Эта функция появится в Beta.</p>
-      </div>
-      <span>⏳</span>
+  <section class="panel">
+    <h2>🎙 Голосовые эффекты</h2>
+    <div class="grid" id="voiceGrid">
+      <button class="voice selected" data-voice="normal" onclick="chooseVoice(this)">
+        <strong>👤 Обычный</strong><small>Без эффекта</small>
+      </button>
+      <button class="voice" data-voice="robot" onclick="chooseVoice(this)">
+        <strong>🤖 Робот</strong><small>Электронный голос</small>
+      </button>
+      <button class="voice" data-voice="deep" onclick="chooseVoice(this)">
+        <strong>🌑 Глубокий</strong><small>Низкий тон</small>
+      </button>
+      <button class="voice" data-voice="chipmunk" onclick="chooseVoice(this)">
+        <strong>🐿️ Мультяшный</strong><small>Высокий тон</small>
+      </button>
+      <button class="voice" data-voice="alien" onclick="chooseVoice(this)">
+        <strong>👽 Инопланетянин</strong><small>Космический стиль</small>
+      </button>
+      <button class="voice" data-voice="demon" onclick="chooseVoice(this)">
+        <strong>👹 Монстр</strong><small>Мрачный стиль</small>
+      </button>
+      <button class="voice" data-voice="whisper" onclick="chooseVoice(this)">
+        <strong>🤫 Шёпот</strong><small>Тихий стиль</small>
+      </button>
+      <button class="voice" data-voice="echo" onclick="chooseVoice(this)">
+        <strong>🔊 Эхо</strong><small>Эффект отражения</small>
+      </button>
+      <button class="voice" data-voice="radio" onclick="chooseVoice(this)">
+        <strong>📻 Радио</strong><small>Радиофильтр</small>
+      </button>
     </div>
-    <button class="secondary" style="width:100%" onclick="alert('Создание собственных голосов появится в VoiceApp Beta - for Android.')">
-      Доступно в Beta
-    </button>
-  </div>
-</section>
+  </section>
 
-<section class="page" id="settings">
-  <button class="secondary" onclick="showPage('home')">← Назад</button>
-  <h2>Настройки</h2>
-  <div class="panel">
-    <strong>🎨 Цвет приложения</strong>
-    <p class="notice">Выбери свой цвет интерфейса.</p>
+  <section class="panel">
+    <h2>🎚 Настройки эффекта</h2>
+    <label for="pitch">Высота тона: <span id="pitchValue">100%</span></label>
+    <input id="pitch" type="range" min="50" max="150" value="100"
+      oninput="updateValue('pitch','pitchValue','%')">
+
+    <label for="timbre">Тембр: <span id="timbreValue">50%</span></label>
+    <input id="timbre" type="range" min="0" max="100" value="50"
+      oninput="updateValue('timbre','timbreValue','%')">
+
+    <label for="speed">Скорость: <span id="speedValue">100%</span></label>
+    <input id="speed" type="range" min="50" max="150" value="100"
+      oninput="updateValue('speed','speedValue','%')">
+
+    <button class="small-button" onclick="testVoice()">🎙 Проверить голос</button>
+    <p class="note">Проверка пока демонстрационная: она не записывает голос и не включает микрофон.</p>
+  </section>
+
+  <section class="panel" id="settings">
+    <h2>⚙️ Настройки</h2>
+
+    <label>Цвет приложения</label>
     <div class="colors">
-      <button class="swatch selected" style="background:#168bff" data-color="#168bff" aria-label="Синий" onclick="setColor(this)"></button>
-      <button class="swatch" style="background:#9857ff" data-color="#9857ff" aria-label="Фиолетовый" onclick="setColor(this)"></button>
-      <button class="swatch" style="background:#f04452" data-color="#f04452" aria-label="Красный" onclick="setColor(this)"></button>
-      <button class="swatch" style="background:#21b978" data-color="#21b978" aria-label="Зелёный" onclick="setColor(this)"></button>
-      <button class="swatch" style="background:#f05baa" data-color="#f05baa" aria-label="Розовый" onclick="setColor(this)"></button>
-      <button class="swatch" style="background:#ff922e" data-color="#ff922e" aria-label="Оранжевый" onclick="setColor(this)"></button>
-      <button class="swatch" style="background:#36c8e8" data-color="#36c8e8" aria-label="Голубой" onclick="setColor(this)"></button>
-      <button class="swatch" style="background:#e8eef7" data-color="#e8eef7" aria-label="Белый" onclick="setColor(this)"></button>
+      <button class="color selected" style="background:#1687ff"
+        onclick="setColor('#1687ff',this)" aria-label="Синий"></button>
+      <button class="color" style="background:#8b5cf6"
+        onclick="setColor('#8b5cf6',this)" aria-label="Фиолетовый"></button>
+      <button class="color" style="background:#f43f5e"
+        onclick="setColor('#f43f5e',this)" aria-label="Красный"></button>
+      <button class="color" style="background:#10b981"
+        onclick="setColor('#10b981',this)" aria-label="Зелёный"></button>
+      <button class="color" style="background:#f59e0b"
+        onclick="setColor('#f59e0b',this)" aria-label="Оранжевый"></button>
     </div>
-  </div>
-  <div class="panel">
-    <strong>📱 О приложении</strong>
-    <p>VoiceApp alpha - for Android</p>
-    <small>Статус: Alpha</small>
-  </div>
-  <p class="notice">Настройки цвета сохраняются на этом устройстве.</p>
-</section>
-</main>
 
-<footer>VoiceApp alpha - for Android<br>Ранняя тестовая версия</footer>
+    <label for="theme">Тема оформления</label>
+    <select id="theme" onchange="setTheme(this.value)">
+      <option value="dark">Тёмная</option>
+      <option value="light">Светлая</option>
+    </select>
+
+    <label for="volume">Громкость интерфейса: <span id="volumeValue">70%</span></label>
+    <input id="volume" type="range" min="0" max="100" value="70"
+      oninput="updateValue('volume','volumeValue','%')">
+
+    <div class="setting-row" style="margin-top:20px">
+      <span>Сбросить настройки</span>
+      <button onclick="resetSettings()">Сбросить</button>
+    </div>
+    <p class="note">Настройки сохраняются в браузере этого устройства.</p>
+  </section>
+
+  <section class="panel locked">
+    <h2>👑 Свои голоса</h2>
+    <p>Создание и сохранение собственных эффектов появится в Beta.</p>
+    <button disabled style="width:100%">🔒 Доступно в Beta</button>
+  </section>
+
+  <footer>VoiceApp Alpha — for Android</footer>
+</main>
+<div id="toast" role="status"></div>
 
 <script>
 let enabled = false;
-let selectedEffect = "normal";
+let selectedVoice = "normal";
+let toastTimer;
 
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(page).classList.add('active');
-  window.scrollTo(0, 0);
+function toast(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.style.display = "none", 2600);
 }
 
 function toggleVoice() {
   enabled = !enabled;
-  document.getElementById('state').textContent =
-    enabled ? '● ДЕМО-РЕЖИМ ВКЛЮЧЁН' : '● ГОЛОС ВЫКЛЮЧЕН';
-  document.getElementById('toggle').textContent =
-    enabled ? 'ВЫКЛЮЧИТЬ' : 'ВКЛЮЧИТЬ';
-  if (enabled) {
-    alert('Это HTML-демо. Для изменения голоса в реальном времени нужен Android-аудиомодуль.');
-  }
+  document.getElementById("dot").classList.toggle("on", enabled);
+  document.getElementById("statusText").textContent =
+    enabled ? "Демонстрация включена" : "Голос выключен";
+  document.getElementById("statusDescription").textContent =
+    enabled
+      ? "Режим включён. Настоящая обработка голоса пока не подключена."
+      : "Выбери голос и нажми кнопку включения.";
+  document.getElementById("toggleButton").textContent =
+    enabled ? "ВЫКЛЮЧИТЬ" : "ВКЛЮЧИТЬ";
+  toast(enabled ? "Демонстрационный режим включён" : "Режим выключен");
 }
 
-function choose(button) {
-  document.querySelectorAll('.effect').forEach(b => b.classList.remove('active'));
-  button.classList.add('active');
-  selectedEffect = button.dataset.effect;
+function chooseVoice(button) {
+  document.querySelectorAll(".voice").forEach(el => el.classList.remove("selected"));
+  button.classList.add("selected");
+  selectedVoice = button.dataset.voice;
+  toast("Выбран эффект: " + button.querySelector("strong").textContent);
 }
 
-function setColor(button) {
-  document.documentElement.style.setProperty('--accent', button.dataset.color);
-  document.querySelectorAll('.swatch').forEach(b => b.classList.remove('selected'));
-  button.classList.add('selected');
-  localStorage.setItem('voiceappColor', button.dataset.color);
-}
-
-function loadAudio(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const player = document.getElementById('player');
-  player.src = URL.createObjectURL(file);
-  player.style.display = 'block';
-  player.playbackRate = 1;
-  player.onplay = () => {
-    const pitch = Number(document.getElementById('pitch').value) / 100;
-    player.playbackRate = pitch;
+function testVoice() {
+  const names = {
+    normal: "Обычный",
+    robot: "Робот",
+    deep: "Глубокий",
+    chipmunk: "Мультяшный",
+    alien: "Инопланетянин",
+    demon: "Монстр",
+    whisper: "Шёпот",
+    echo: "Эхо",
+    radio: "Радио"
   };
+  toast("Выбран эффект «" + names[selectedVoice] +
+    "». Реальная проверка голоса появится позже.");
 }
 
-const savedColor = localStorage.getItem('voiceappColor');
-if (savedColor) {
-  document.documentElement.style.setProperty('--accent', savedColor);
-  document.querySelectorAll('.swatch').forEach(b => {
-    b.classList.toggle('selected', b.dataset.color === savedColor);
-  });
+function updateValue(inputId, outputId, suffix) {
+  document.getElementById(outputId).textContent =
+    document.getElementById(inputId).value + suffix;
 }
+
+function setColor(color, button) {
+  document.documentElement.style.setProperty("--accent", color);
+  document.querySelectorAll(".color").forEach(el => el.classList.remove("selected"));
+  button.classList.add("selected");
+  saveSettings();
+}
+
+function setTheme(theme) {
+  if (theme === "light") {
+    document.documentElement.style.setProperty("--bg", "#eef3fa");
+    document.documentElement.style.setProperty("--panel", "#ffffff");
+    document.documentElement.style.setProperty("--text", "#13233a");
+    document.documentElement.style.setProperty("--muted", "#526783");
+    document.documentElement.style.setProperty("--border", "#cbd8e8");
+  } else {
+    document.documentElement.style.setProperty("--bg", "#07101f");
+    document.documentElement.style.setProperty("--panel", "#0d1b31");
+    document.documentElement.style.setProperty("--text", "#f2f6ff");
+    document.documentElement.style.setProperty("--muted", "#91a9cb");
+    document.documentElement.style.setProperty("--border", "#203a5e");
+  }
+  saveSettings();
+}
+
+function saveSettings() {
+  const settings = {
+    color: getComputedStyle(document.documentElement)
+      .getPropertyValue("--accent").trim(),
+    theme: document.getElementById("theme").value,
+    pitch: document.getElementById("pitch").value,
+    timbre: document.getElementById("timbre").value,
+    speed: document.getElementById("speed").value,
+    volume: document.getElementById("volume").value
+  };
+  try { localStorage.setItem("voiceAppSettings", JSON.stringify(settings)); }
+  catch (e) {}
+}
+
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem("voiceAppSettings") || "null");
+    if (!s) return;
+    if (s.color) {
+      document.documentElement.style.setProperty("--accent", s.color);
+      document.querySelectorAll(".color").forEach(b => {
+        b.classList.toggle("selected", b.style.backgroundColor === s.color ||
+          b.style.backgroundColor === hexToRgb(s.color));
+      });
+    }
+    if (s.theme) {
+      document.getElementById("theme").value = s.theme;
+      setTheme(s.theme);
+    }
+    ["pitch", "timbre", "speed", "volume"].forEach(id => {
+      if (s[id] !== undefined) {
+        document.getElementById(id).value = s[id];
+        updateValue(id, id + "Value", "%");
+      }
+    });
+  } catch (e) {}
+}
+
+function hexToRgb(hex) {
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return m ? `rgb(${parseInt(m[1],16)}, ${parseInt(m[2],16)}, ${parseInt(m[3],16)})` : "";
+}
+
+function resetSettings() {
+  try { localStorage.removeItem("voiceAppSettings"); } catch (e) {}
+  location.reload();
+}
+
+function scrollToSettings() {
+  document.getElementById("settings").scrollIntoView({ behavior: "smooth" });
+}
+
+document.querySelectorAll('input[type="range"]').forEach(input => {
+  input.addEventListener("change", saveSettings);
+});
+loadSettings();
 </script>
 </body>
 </html>
