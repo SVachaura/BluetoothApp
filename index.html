@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VoiceApp alpha - for Android</title>
+<style>
+:root {
+  --accent: #168bff;
+  --bg: #0b1020;
+  --card: #151d30;
+  --text: #f4f7ff;
+  --muted: #9ba9c2;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 18px;
+}
+h1 { font-size: 22px; margin: 0; }
+small { color: var(--muted); }
+button { font: inherit; cursor: pointer; }
+.icon {
+  border: 0;
+  color: var(--text);
+  background: var(--card);
+  border-radius: 13px;
+  padding: 12px;
+}
+main { padding: 0 18px 35px; max-width: 520px; margin: auto; }
+.status {
+  text-align: center;
+  padding: 25px 12px;
+  background: var(--card);
+  border-radius: 23px;
+}
+.mic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--accent);
+  color: white;
+  font-size: 38px;
+  margin: 16px 0;
+  box-shadow: 0 0 35px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.primary {
+  background: var(--accent);
+  color: white;
+  border: 0;
+  padding: 15px;
+  width: 100%;
+  border-radius: 14px;
+  font-weight: bold;
+}
+h2 { font-size: 18px; margin: 26px 0 12px; }
+.effects {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.effect {
+  background: var(--card);
+  border: 2px solid transparent;
+  color: var(--text);
+  border-radius: 16px;
+  text-align: left;
+  padding: 15px;
+}
+.effect.active { border-color: var(--accent); }
+.emoji { font-size: 27px; display: block; margin-bottom: 10px; }
+.effect small { display: block; margin-top: 5px; }
+.panel {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 12px;
+}
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.colors {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+.swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 3px solid transparent;
+  border-radius: 15px;
+}
+.swatch.selected { outline: 2px solid white; outline-offset: 2px; }
+.row { display:flex; justify-content:space-between; gap:10px; align-items:center; }
+.secondary {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 12px;
+}
+.locked { opacity: .7; }
+footer { text-align:center; padding: 25px; color: var(--muted); font-size: 12px; }
+.page { display:none; }
+.page.active { display:block; }
+.notice { color: var(--muted); font-size: 13px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>VoiceApp</h1>
+    <small>alpha - for Android</small>
+  </div>
+  <button class="icon" onclick="showPage('settings')" aria-label="Настройки">⚙️</button>
+</header>
+
+<main>
+<section class="page active" id="home">
+  <div class="status">
+    <small id="state">● ГОЛОС ВЫКЛЮЧЕН</small><br>
+    <button class="mic" onclick="toggleVoice()" aria-label="Включить голос">🎙</button>
+    <h2 style="margin:0 0 8px">Изменение голоса</h2>
+    <p class="notice">Выбери эффект и попробуй его на своей записи.</p>
+    <button class="primary" id="toggle" onclick="toggleVoice()">ВКЛЮЧИТЬ</button>
+  </div>
+
+  <h2>Голосовые эффекты</h2>
+  <div class="effects" id="effects">
+    <button class="effect active" data-effect="normal" onclick="choose(this)">
+      <span class="emoji">🗣️</span>Обычный
+      <small>Без эффекта</small>
+    </button>
+    <button class="effect" data-effect="robot" onclick="choose(this)">
+      <span class="emoji">🤖</span>Робот
+      <small>Электронный голос</small>
+    </button>
+    <button class="effect" data-effect="deep" onclick="choose(this)">
+      <span class="emoji">🎙️</span>Глубокий
+      <small>Ниже тон</small>
+    </button>
+    <button class="effect" data-effect="chipmunk" onclick="choose(this)">
+      <span class="emoji">🐿️</span>Белка
+      <small>Выше тон</small>
+    </button>
+    <button class="effect" data-effect="alien" onclick="choose(this)">
+      <span class="emoji">👽</span>Инопланетянин
+      <small>Необычный звук</small>
+    </button>
+    <button class="effect" data-effect="demon" onclick="choose(this)">
+      <span class="emoji">👹</span>Демон
+      <small>Низкий и мрачный</small>
+    </button>
+  </div>
+
+  <h2>Настройка эффекта</h2>
+  <div class="panel">
+    <div class="row">
+      <label for="pitch">Высота голоса</label>
+      <span id="pitchValue">100%</span>
+    </div>
+    <input id="pitch" type="range" min="60" max="160" value="100"
+      oninput="pitchValue.textContent=this.value+'%'">
+    <p class="notice">В демоверсии настройка применяется к воспроизведению записи.</p>
+    <button class="secondary" onclick="document.getElementById('audioFile').click()">
+      📂 Выбрать свою запись
+    </button>
+    <input id="audioFile" type="file" accept="audio/*" hidden onchange="loadAudio(this)">
+    <audio id="player" controls style="width:100%;margin-top:12px;display:none"></audio>
+  </div>
+
+  <h2>Свои голоса</h2>
+  <div class="panel locked">
+    <div class="row">
+      <div>
+        <strong>🔒 Создание голосов</strong>
+        <p class="notice">Эта функция появится в Beta.</p>
+      </div>
+      <span>⏳</span>
+    </div>
+    <button class="secondary" style="width:100%" onclick="alert('Создание собственных голосов появится в VoiceApp Beta - for Android.')">
+      Доступно в Beta
+    </button>
+  </div>
+</section>
+
+<section class="page" id="settings">
+  <button class="secondary" onclick="showPage('home')">← Назад</button>
+  <h2>Настройки</h2>
+  <div class="panel">
+    <strong>🎨 Цвет приложения</strong>
+    <p class="notice">Выбери свой цвет интерфейса.</p>
+    <div class="colors">
+      <button class="swatch selected" style="background:#168bff" data-color="#168bff" aria-label="Синий" onclick="setColor(this)"></button>
+      <button class="swatch" style="background:#9857ff" data-color="#9857ff" aria-label="Фиолетовый" onclick="setColor(this)"></button>
+      <button class="swatch" style="background:#f04452" data-color="#f04452" aria-label="Красный" onclick="setColor(this)"></button>
+      <button class="swatch" style="background:#21b978" data-color="#21b978" aria-label="Зелёный" onclick="setColor(this)"></button>
+      <button class="swatch" style="background:#f05baa" data-color="#f05baa" aria-label="Розовый" onclick="setColor(this)"></button>
+      <button class="swatch" style="background:#ff922e" data-color="#ff922e" aria-label="Оранжевый" onclick="setColor(this)"></button>
+      <button class="swatch" style="background:#36c8e8" data-color="#36c8e8" aria-label="Голубой" onclick="setColor(this)"></button>
+      <button class="swatch" style="background:#e8eef7" data-color="#e8eef7" aria-label="Белый" onclick="setColor(this)"></button>
+    </div>
+  </div>
+  <div class="panel">
+    <strong>📱 О приложении</strong>
+    <p>VoiceApp alpha - for Android</p>
+    <small>Статус: Alpha</small>
+  </div>
+  <p class="notice">Настройки цвета сохраняются на этом устройстве.</p>
+</section>
+</main>
+
+<footer>VoiceApp alpha - for Android<br>Ранняя тестовая версия</footer>
+
+<script>
+let enabled = false;
+let selectedEffect = "normal";
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toggleVoice() {
+  enabled = !enabled;
+  document.getElementById('state').textContent =
+    enabled ? '● ДЕМО-РЕЖИМ ВКЛЮЧЁН' : '● ГОЛОС ВЫКЛЮЧЕН';
+  document.getElementById('toggle').textContent =
+    enabled ? 'ВЫКЛЮЧИТЬ' : 'ВКЛЮЧИТЬ';
+  if (enabled) {
+    alert('Это HTML-демо. Для изменения голоса в реальном времени нужен Android-аудиомодуль.');
+  }
+}
+
+function choose(button) {
+  document.querySelectorAll('.effect').forEach(b => b.classList.remove('active'));
+  button.classList.add('active');
+  selectedEffect = button.dataset.effect;
+}
+
+function setColor(button) {
+  document.documentElement.style.setProperty('--accent', button.dataset.color);
+  document.querySelectorAll('.swatch').forEach(b => b.classList.remove('selected'));
+  button.classList.add('selected');
+  localStorage.setItem('voiceappColor', button.dataset.color);
+}
+
+function loadAudio(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const player = document.getElementById('player');
+  player.src = URL.createObjectURL(file);
+  player.style.display = 'block';
+  player.playbackRate = 1;
+  player.onplay = () => {
+    const pitch = Number(document.getElementById('pitch').value) / 100;
+    player.playbackRate = pitch;
+  };
+}
+
+const savedColor = localStorage.getItem('voiceappColor');
+if (savedColor) {
+  document.documentElement.style.setProperty('--accent', savedColor);
+  document.querySelectorAll('.swatch').forEach(b => {
+    b.classList.toggle('selected', b.dataset.color === savedColor);
+  });
+}
+</script>
+</body>
+</html>
