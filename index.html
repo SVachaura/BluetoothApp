@@ -3,174 +3,113 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#091321">
 <title>VoiceApp Alpha</title>
 <style>
 :root {
-  --accent: #1687ff;
-  --bg: #07101f;
-  --panel: #0d1b31;
-  --text: #f2f6ff;
-  --muted: #91a9cb;
-  --border: #203a5e;
+  --accent:#3984ff;
+  --bg:#091321;
+  --panel:#111f33;
+  --panel2:#172941;
+  --text:#edf4ff;
+  --muted:#93a8c4;
+  --border:#263a55;
 }
-* { box-sizing: border-box; }
+* {box-sizing:border-box}
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:system-ui,Arial,sans-serif;
+  transition:background .2s,color .2s;
 }
+button,input,select {font:inherit}
+button {color:inherit;cursor:pointer}
 header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 16px;
-  border-bottom: 1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg);z-index:3;
 }
-.logo { font-size: 24px; font-weight: 800; }
-.logo span { color: var(--accent); }
-.version {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 5px;
+.logo {font-size:24px;font-weight:850;letter-spacing:-.8px}
+.logo span {color:var(--accent)}
+.version {font-size:12px;color:var(--muted);margin-top:2px}
+.icon-button {
+  width:44px;height:44px;border-radius:14px;
+  background:var(--panel);border:1px solid var(--border);font-size:20px;
 }
-main {
-  max-width: 720px;
-  margin: auto;
-  padding: 16px;
-}
+main {max-width:700px;margin:auto;padding:16px}
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 18px;
-  margin-bottom: 16px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:20px;padding:18px;margin-bottom:15px;
 }
-.status {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--muted);
-  font-size: 14px;
-}
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #73839b;
-}
-.dot.on { background: #24d69a; }
-h2 { font-size: 19px; margin: 0 0 15px; }
-p { color: var(--muted); line-height: 1.5; }
-button, select, input { font: inherit; }
-button {
-  cursor: pointer;
-  color: var(--text);
-  border: 1px solid var(--border);
-  background: #132643;
-  border-radius: 12px;
-  padding: 13px 15px;
-}
-button:active { transform: scale(.98); }
+h2 {font-size:18px;margin:0 0 15px}
+p {color:var(--muted);font-size:14px;line-height:1.5}
+.status {display:flex;align-items:center;gap:9px;font-size:14px}
+.dot {width:9px;height:9px;border-radius:50%;background:#74849b}
+.dot.on {background:#25d69b;box-shadow:0 0 12px #25d69b80}
 .primary {
-  background: var(--accent);
-  color: white;
-  border: 0;
-  width: 100%;
-  font-weight: bold;
-  font-size: 17px;
-  padding: 17px;
-  margin-top: 17px;
+  display:block;width:100%;padding:17px;border:0;border-radius:15px;
+  margin-top:16px;background:var(--accent);color:white;
+  font-size:16px;font-weight:800;letter-spacing:.5px;
+  box-shadow:0 6px 22px color-mix(in srgb,var(--accent) 24%,transparent);
 }
-.small-button {
-  width: 100%;
-  margin-top: 12px;
-  background: transparent;
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
+.primary:active {transform:scale(.98)}
+.grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .voice {
-  text-align: left;
-  min-height: 90px;
+  min-height:90px;text-align:left;padding:13px;
+  border:1px solid var(--border);border-radius:14px;
+  background:var(--panel2);
 }
-.voice strong { display: block; margin-bottom: 8px; }
-.voice small { color: var(--muted); }
+.voice strong {display:block;font-size:14px;margin-bottom:7px}
+.voice small {color:var(--muted);font-size:12px}
 .voice.selected {
-  border: 2px solid var(--accent);
-  background: #112d4d;
+  border:2px solid var(--accent);
+  background:color-mix(in srgb,var(--accent) 13%,var(--panel));
 }
-label {
-  display: block;
-  margin: 18px 0 9px;
-  font-size: 14px;
-}
-input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
+label {display:block;font-size:14px;margin:19px 0 9px}
+input[type=range] {width:100%;accent-color:var(--accent)}
 select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  color: var(--text);
-  background: #081529;
+  width:100%;padding:12px;border-radius:12px;
+  color:var(--text);background:var(--panel2);border:1px solid var(--border);
+}
+.secondary {
+  width:100%;padding:13px;border-radius:13px;
+  border:1px solid var(--accent);
+  background:color-mix(in srgb,var(--accent) 10%,var(--panel));
+  color:var(--accent);font-weight:700;margin-top:14px;
+}
+.note {font-size:12px;color:var(--muted);line-height:1.5}
+.colors {display:flex;flex-wrap:wrap;gap:14px;padding:5px 3px}
+.color {
+  width:34px;height:34px;flex-shrink:0;border-radius:50%;
+  border:2px solid #ffffff45;padding:0;
+  box-shadow:0 3px 9px #00000025;transition:transform .15s;
+}
+.color:active {transform:scale(.9)}
+.color.selected {
+  outline:3px solid var(--accent);outline-offset:3px;
+  box-shadow:0 0 13px color-mix(in srgb,var(--accent) 55%,transparent);
 }
 .setting-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-top:18px;
 }
-.setting-row button { padding: 9px 12px; }
-.colors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 12px;
+.small-button {
+  padding:10px 13px;border-radius:11px;
+  border:1px solid var(--border);background:var(--panel2);
 }
-.color {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  border: 2px solid #ffffff40;
-  padding: 0;
-}
-.color.selected { outline: 3px solid white; }
-.note {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 12px;
-}
+.reset {color:#ff7586}
+.locked {opacity:.65}
+.locked button {width:100%;cursor:not-allowed}
+footer {text-align:center;color:var(--muted);padding:8px 16px 24px;font-size:12px}
 #toast {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: 18px;
-  max-width: 480px;
-  margin: auto;
-  padding: 14px;
-  background: #203653;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  display: none;
-  z-index: 5;
+  position:fixed;z-index:10;bottom:20px;left:16px;right:16px;
+  max-width:460px;margin:auto;padding:14px 16px;border-radius:13px;
+  border:1px solid var(--border);background:var(--panel2);
+  color:var(--text);box-shadow:0 8px 30px #0003;display:none;
 }
-.locked { opacity: .65; }
-footer {
-  text-align: center;
-  padding: 15px;
-  color: var(--muted);
-  font-size: 12px;
-}
-@media (min-width: 560px) {
-  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media(min-width:560px) {
+  .grid {grid-template-columns:repeat(3,minmax(0,1fr))}
+  main {padding-top:22px}
 }
 </style>
 </head>
@@ -178,27 +117,25 @@ footer {
 <header>
   <div>
     <div class="logo">Voice<span>App</span></div>
-    <div class="version">Alpha — for Android</div>
+    <div class="version">ALPHA · FOR ANDROID</div>
   </div>
-  <button onclick="scrollToSettings()" aria-label="Настройки">⚙️</button>
+  <button class="icon-button" onclick="scrollSettings()" aria-label="Настройки">⚙️</button>
 </header>
 
 <main>
   <section class="panel">
     <div class="status">
-      <span class="dot" id="dot"></span>
-      <span id="statusText">Голос выключен</span>
+      <span class="dot" id="statusDot"></span>
+      <strong id="statusText">Голос выключен</strong>
     </div>
-    <p id="statusDescription">Выбери голос и нажми кнопку включения.</p>
-    <button class="primary" id="toggleButton" onclick="toggleVoice()">
-      ВКЛЮЧИТЬ
-    </button>
-    <div class="note">Демонстрационный переключатель. Микрофон не используется.</div>
+    <p id="statusDescription">Выбери эффект и включи демонстрационный режим.</p>
+    <button class="primary" id="toggleButton" onclick="toggleVoice()">ВКЛЮЧИТЬ</button>
+    <p class="note">Демонстрационный переключатель. Микрофон не используется.</p>
   </section>
 
   <section class="panel">
-    <h2>🎙 Голосовые эффекты</h2>
-    <div class="grid" id="voiceGrid">
+    <h2>🎙 Голосовые эффекты · 10</h2>
+    <div class="grid">
       <button class="voice selected" data-voice="normal" onclick="chooseVoice(this)">
         <strong>👤 Обычный</strong><small>Без эффекта</small>
       </button>
@@ -208,13 +145,13 @@ footer {
       <button class="voice" data-voice="deep" onclick="chooseVoice(this)">
         <strong>🌑 Глубокий</strong><small>Низкий тон</small>
       </button>
-      <button class="voice" data-voice="chipmunk" onclick="chooseVoice(this)">
+      <button class="voice" data-voice="cartoon" onclick="chooseVoice(this)">
         <strong>🐿️ Мультяшный</strong><small>Высокий тон</small>
       </button>
       <button class="voice" data-voice="alien" onclick="chooseVoice(this)">
         <strong>👽 Инопланетянин</strong><small>Космический стиль</small>
       </button>
-      <button class="voice" data-voice="demon" onclick="chooseVoice(this)">
+      <button class="voice" data-voice="monster" onclick="chooseVoice(this)">
         <strong>👹 Монстр</strong><small>Мрачный стиль</small>
       </button>
       <button class="voice" data-voice="whisper" onclick="chooseVoice(this)">
@@ -226,191 +163,219 @@ footer {
       <button class="voice" data-voice="radio" onclick="chooseVoice(this)">
         <strong>📻 Радио</strong><small>Радиофильтр</small>
       </button>
+      <button class="voice" data-voice="ghost" onclick="chooseVoice(this)">
+        <strong>👻 Призрак</strong><small>Потусторонний стиль</small>
+      </button>
     </div>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="effectSettings">
     <h2>🎚 Настройки эффекта</h2>
     <label for="pitch">Высота тона: <span id="pitchValue">100%</span></label>
-    <input id="pitch" type="range" min="50" max="150" value="100"
-      oninput="updateValue('pitch','pitchValue','%')">
+    <input id="pitch" type="range" min="50" max="150" value="100">
 
     <label for="timbre">Тембр: <span id="timbreValue">50%</span></label>
-    <input id="timbre" type="range" min="0" max="100" value="50"
-      oninput="updateValue('timbre','timbreValue','%')">
+    <input id="timbre" type="range" min="0" max="100" value="50">
 
     <label for="speed">Скорость: <span id="speedValue">100%</span></label>
-    <input id="speed" type="range" min="50" max="150" value="100"
-      oninput="updateValue('speed','speedValue','%')">
+    <input id="speed" type="range" min="50" max="150" value="100">
 
-    <button class="small-button" onclick="testVoice()">🎙 Проверить голос</button>
-    <p class="note">Проверка пока демонстрационная: она не записывает голос и не включает микрофон.</p>
+    <button class="secondary" onclick="testVoice()">🎙 Проверить голос</button>
+    <p class="note">Проверка пока демонстрационная. Микрофон не включается.</p>
   </section>
 
   <section class="panel" id="settings">
-    <h2>⚙️ Настройки</h2>
-
-    <label>Цвет приложения</label>
-    <div class="colors">
-      <button class="color selected" style="background:#1687ff"
-        onclick="setColor('#1687ff',this)" aria-label="Синий"></button>
-      <button class="color" style="background:#8b5cf6"
-        onclick="setColor('#8b5cf6',this)" aria-label="Фиолетовый"></button>
-      <button class="color" style="background:#f43f5e"
-        onclick="setColor('#f43f5e',this)" aria-label="Красный"></button>
-      <button class="color" style="background:#10b981"
-        onclick="setColor('#10b981',this)" aria-label="Зелёный"></button>
-      <button class="color" style="background:#f59e0b"
-        onclick="setColor('#f59e0b',this)" aria-label="Оранжевый"></button>
+    <h2>⚙️ Настройки приложения</h2>
+    <label>Цвет акцента</label>
+    <div class="colors" id="colorPicker">
+      <button class="color selected" style="background:#3984ff" data-color="#3984ff" onclick="setColor(this)" aria-label="Синий"></button>
+      <button class="color" style="background:#38bdf8" data-color="#38bdf8" onclick="setColor(this)" aria-label="Небесный"></button>
+      <button class="color" style="background:#6366f1" data-color="#6366f1" onclick="setColor(this)" aria-label="Индиго"></button>
+      <button class="color" style="background:#8b5cf6" data-color="#8b5cf6" onclick="setColor(this)" aria-label="Фиолетовый"></button>
+      <button class="color" style="background:#d946ef" data-color="#d946ef" onclick="setColor(this)" aria-label="Маджента"></button>
+      <button class="color" style="background:#f472b6" data-color="#f472b6" onclick="setColor(this)" aria-label="Розовый"></button>
+      <button class="color" style="background:#f43f5e" data-color="#f43f5e" onclick="setColor(this)" aria-label="Красный"></button>
+      <button class="color" style="background:#fb7185" data-color="#fb7185" onclick="setColor(this)" aria-label="Коралловый"></button>
+      <button class="color" style="background:#f97316" data-color="#f97316" onclick="setColor(this)" aria-label="Оранжевый"></button>
+      <button class="color" style="background:#fbbf24" data-color="#fbbf24" onclick="setColor(this)" aria-label="Янтарный"></button>
+      <button class="color" style="background:#a3e635" data-color="#a3e635" onclick="setColor(this)" aria-label="Лаймовый"></button>
+      <button class="color" style="background:#22c55e" data-color="#22c55e" onclick="setColor(this)" aria-label="Зелёный"></button>
+      <button class="color" style="background:#10b981" data-color="#10b981" onclick="setColor(this)" aria-label="Изумрудный"></button>
+      <button class="color" style="background:#14b8a6" data-color="#14b8a6" onclick="setColor(this)" aria-label="Бирюзовый"></button>
+      <button class="color" style="background:#64748b" data-color="#64748b" onclick="setColor(this)" aria-label="Сланцевый"></button>
+      <button class="color" style="background:#e2e8f0" data-color="#e2e8f0" onclick="setColor(this)" aria-label="Серебристый"></button>
     </div>
 
     <label for="theme">Тема оформления</label>
-    <select id="theme" onchange="setTheme(this.value)">
-      <option value="dark">Тёмная</option>
-      <option value="light">Светлая</option>
+    <select id="theme">
+      <option value="dark">🌙 Тёмная</option>
+      <option value="light">☁️ Мягкая светлая</option>
     </select>
 
     <label for="volume">Громкость интерфейса: <span id="volumeValue">70%</span></label>
-    <input id="volume" type="range" min="0" max="100" value="70"
-      oninput="updateValue('volume','volumeValue','%')">
+    <input id="volume" type="range" min="0" max="100" value="70">
+    <p class="note">Громкость пока сохраняется как настройка; звуки интерфейса не подключены.</p>
 
-    <div class="setting-row" style="margin-top:20px">
+    <div class="setting-row">
       <span>Сбросить настройки</span>
-      <button onclick="resetSettings()">Сбросить</button>
+      <button class="small-button reset" onclick="resetSettings()">Сбросить</button>
     </div>
-    <p class="note">Настройки сохраняются в браузере этого устройства.</p>
   </section>
 
   <section class="panel locked">
     <h2>👑 Свои голоса</h2>
-    <p>Создание и сохранение собственных эффектов появится в Beta.</p>
-    <button disabled style="width:100%">🔒 Доступно в Beta</button>
+    <p>Создание собственных эффектов появится в Beta.</p>
+    <button class="small-button" disabled>🔒 Доступно в Beta</button>
   </section>
 
-  <footer>VoiceApp Alpha — for Android</footer>
+  <footer>VoiceApp Alpha · for Android</footer>
 </main>
-<div id="toast" role="status"></div>
+
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 let enabled = false;
 let selectedVoice = "normal";
 let toastTimer;
 
+const voiceNames = {
+  normal:"Обычный",
+  robot:"Робот",
+  deep:"Глубокий",
+  cartoon:"Мультяшный",
+  alien:"Инопланетянин",
+  monster:"Монстр",
+  whisper:"Шёпот",
+  echo:"Эхо",
+  radio:"Радио",
+  ghost:"Призрак"
+};
+
 function toast(message) {
-  const el = document.getElementById("toast");
-  el.textContent = message;
-  el.style.display = "block";
+  const box = document.getElementById("toast");
+  box.textContent = message;
+  box.style.display = "block";
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.style.display = "none", 2600);
+  toastTimer = setTimeout(() => box.style.display = "none", 2600);
 }
 
 function toggleVoice() {
   enabled = !enabled;
-  document.getElementById("dot").classList.toggle("on", enabled);
+  document.getElementById("statusDot").classList.toggle("on", enabled);
   document.getElementById("statusText").textContent =
     enabled ? "Демонстрация включена" : "Голос выключен";
   document.getElementById("statusDescription").textContent =
     enabled
-      ? "Режим включён. Настоящая обработка голоса пока не подключена."
-      : "Выбери голос и нажми кнопку включения.";
+      ? "Режим включён. Обработка голоса пока не подключена."
+      : "Выбери эффект и включи демонстрационный режим.";
   document.getElementById("toggleButton").textContent =
     enabled ? "ВЫКЛЮЧИТЬ" : "ВКЛЮЧИТЬ";
   toast(enabled ? "Демонстрационный режим включён" : "Режим выключен");
 }
 
 function chooseVoice(button) {
-  document.querySelectorAll(".voice").forEach(el => el.classList.remove("selected"));
+  document.querySelectorAll(".voice").forEach(item =>
+    item.classList.remove("selected")
+  );
   button.classList.add("selected");
   selectedVoice = button.dataset.voice;
-  toast("Выбран эффект: " + button.querySelector("strong").textContent);
+  toast("Выбран эффект: " + voiceNames[selectedVoice]);
+  saveSettings();
 }
 
 function testVoice() {
-  const names = {
-    normal: "Обычный",
-    robot: "Робот",
-    deep: "Глубокий",
-    chipmunk: "Мультяшный",
-    alien: "Инопланетянин",
-    demon: "Монстр",
-    whisper: "Шёпот",
-    echo: "Эхо",
-    radio: "Радио"
-  };
-  toast("Выбран эффект «" + names[selectedVoice] +
-    "». Реальная проверка голоса появится позже.");
+  toast("Выбран эффект «" + voiceNames[selectedVoice] +
+    "». Настоящая проверка будет добавлена позже.");
 }
 
-function updateValue(inputId, outputId, suffix) {
-  document.getElementById(outputId).textContent =
-    document.getElementById(inputId).value + suffix;
-}
-
-function setColor(color, button) {
-  document.documentElement.style.setProperty("--accent", color);
-  document.querySelectorAll(".color").forEach(el => el.classList.remove("selected"));
-  button.classList.add("selected");
+function setColor(button) {
+  document.documentElement.style.setProperty("--accent", button.dataset.color);
+  document.querySelectorAll(".color").forEach(item =>
+    item.classList.toggle("selected", item === button)
+  );
   saveSettings();
 }
 
 function setTheme(theme) {
+  const root = document.documentElement;
   if (theme === "light") {
-    document.documentElement.style.setProperty("--bg", "#eef3fa");
-    document.documentElement.style.setProperty("--panel", "#ffffff");
-    document.documentElement.style.setProperty("--text", "#13233a");
-    document.documentElement.style.setProperty("--muted", "#526783");
-    document.documentElement.style.setProperty("--border", "#cbd8e8");
+    root.style.setProperty("--bg", "#dce5f0");
+    root.style.setProperty("--panel", "#edf2f8");
+    root.style.setProperty("--panel2", "#e3eaf3");
+    root.style.setProperty("--text", "#24364d");
+    root.style.setProperty("--muted", "#647991");
+    root.style.setProperty("--border", "#c1cede");
   } else {
-    document.documentElement.style.setProperty("--bg", "#07101f");
-    document.documentElement.style.setProperty("--panel", "#0d1b31");
-    document.documentElement.style.setProperty("--text", "#f2f6ff");
-    document.documentElement.style.setProperty("--muted", "#91a9cb");
-    document.documentElement.style.setProperty("--border", "#203a5e");
+    root.style.setProperty("--bg", "#091321");
+    root.style.setProperty("--panel", "#111f33");
+    root.style.setProperty("--panel2", "#172941");
+    root.style.setProperty("--text", "#edf4ff");
+    root.style.setProperty("--muted", "#93a8c4");
+    root.style.setProperty("--border", "#263a55");
   }
   saveSettings();
 }
 
-function saveSettings() {
-  const settings = {
-    color: getComputedStyle(document.documentElement)
-      .getPropertyValue("--accent").trim(),
-    theme: document.getElementById("theme").value,
-    pitch: document.getElementById("pitch").value,
-    timbre: document.getElementById("timbre").value,
-    speed: document.getElementById("speed").value,
-    volume: document.getElementById("volume").value
-  };
-  try { localStorage.setItem("voiceAppSettings", JSON.stringify(settings)); }
-  catch (e) {}
+function updateRange(id) {
+  document.getElementById(id + "Value").textContent =
+    document.getElementById(id).value + "%";
+  saveSettings();
 }
 
-function loadSettings() {
+function scrollSettings() {
+  document.getElementById("settings").scrollIntoView({
+    behavior:"smooth", block:"start"
+  });
+}
+
+function saveSettings() {
+  const settings = {
+    color:getComputedStyle(document.documentElement)
+      .getPropertyValue("--accent").trim(),
+    theme:document.getElementById("theme").value,
+    pitch:document.getElementById("pitch").value,
+    timbre:document.getElementById("timbre").value,
+    speed:document.getElementById("speed").value,
+    volume:document.getElementById("volume").value,
+    voice:selectedVoice
+  };
   try {
-    const s = JSON.parse(localStorage.getItem("voiceAppSettings") || "null");
-    if (!s) return;
-    if (s.color) {
-      document.documentElement.style.setProperty("--accent", s.color);
-      document.querySelectorAll(".color").forEach(b => {
-        b.classList.toggle("selected", b.style.backgroundColor === s.color ||
-          b.style.backgroundColor === hexToRgb(s.color));
-      });
-    }
-    if (s.theme) {
-      document.getElementById("theme").value = s.theme;
-      setTheme(s.theme);
-    }
-    ["pitch", "timbre", "speed", "volume"].forEach(id => {
-      if (s[id] !== undefined) {
-        document.getElementById(id).value = s[id];
-        updateValue(id, id + "Value", "%");
-      }
-    });
+    localStorage.setItem("voiceAppSettings", JSON.stringify(settings));
   } catch (e) {}
 }
 
-function hexToRgb(hex) {
-  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return m ? `rgb(${parseInt(m[1],16)}, ${parseInt(m[2],16)}, ${parseInt(m[3],16)})` : "";
+function loadSettings() {
+  let s;
+  try {
+    s = JSON.parse(localStorage.getItem("voiceAppSettings") || "null");
+  } catch (e) { s = null; }
+  if (!s) return;
+
+  if (s.color) {
+    document.documentElement.style.setProperty("--accent", s.color);
+    document.querySelectorAll(".color").forEach(button => {
+      button.classList.toggle("selected", button.dataset.color === s.color);
+    });
+  }
+
+  if (s.theme) {
+    document.getElementById("theme").value = s.theme;
+    setTheme(s.theme);
+  }
+
+  ["pitch","timbre","speed","volume"].forEach(id => {
+    if (s[id] !== undefined) {
+      document.getElementById(id).value = s[id];
+      updateRange(id);
+    }
+  });
+
+  if (s.voice && voiceNames[s.voice]) {
+    selectedVoice = s.voice;
+    document.querySelectorAll(".voice").forEach(button => {
+      button.classList.toggle("selected", button.dataset.voice === selectedVoice);
+    });
+  }
 }
 
 function resetSettings() {
@@ -418,13 +383,12 @@ function resetSettings() {
   location.reload();
 }
 
-function scrollToSettings() {
-  document.getElementById("settings").scrollIntoView({ behavior: "smooth" });
-}
+document.getElementById("theme").addEventListener("change", e => setTheme(e.target.value));
 
-document.querySelectorAll('input[type="range"]').forEach(input => {
-  input.addEventListener("change", saveSettings);
+["pitch","timbre","speed","volume"].forEach(id => {
+  document.getElementById(id).addEventListener("input", () => updateRange(id));
 });
+
 loadSettings();
 </script>
 </body>
