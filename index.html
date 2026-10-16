@@ -1,395 +1,761 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#091321">
-<title>VoiceApp Alpha</title>
+<title>ScriptCode</title>
+
 <style>
+* {
+  box-sizing: border-box;
+}
+
 :root {
-  --accent:#3984ff;
-  --bg:#091321;
-  --panel:#111f33;
-  --panel2:#172941;
-  --text:#edf4ff;
-  --muted:#93a8c4;
-  --border:#263a55;
+  --blue: #08a9f5;
+  --light-blue: #35c6f3;
+  --green: #008d24;
+  --white: #ffffff;
 }
-* {box-sizing:border-box}
+
 body {
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:system-ui,Arial,sans-serif;
-  transition:background .2s,color .2s;
+  margin: 0;
+  font-family: "Nunito Sans", Arial, sans-serif;
+  background: var(--blue);
+  color: white;
+  overflow: hidden;
 }
-button,input,select {font:inherit}
-button {color:inherit;cursor:pointer}
-header {
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px;border-bottom:1px solid var(--border);
-  position:sticky;top:0;background:var(--bg);z-index:3;
+
+button, input, textarea, select {
+  font: inherit;
 }
-.logo {font-size:24px;font-weight:850;letter-spacing:-.8px}
-.logo span {color:var(--accent)}
-.version {font-size:12px;color:var(--muted);margin-top:2px}
-.icon-button {
-  width:44px;height:44px;border-radius:14px;
-  background:var(--panel);border:1px solid var(--border);font-size:20px;
+
+button {
+  cursor: pointer;
 }
-main {max-width:700px;margin:auto;padding:16px}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity .3s, transform .3s;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ГЛАВНОЕ МЕНЮ */
+
+#home {
+  align-items: center;
+  text-align: center;
+  padding-top: 24px;
+  overflow-y: auto;
+}
+
+.brand {
+  font-size: clamp(90px, 22vw, 145px);
+  font-weight: 900;
+  letter-spacing: -8px;
+  animation: appear .7s ease both;
+}
+
+.welcome {
+  font-size: clamp(30px, 7vw, 48px);
+  line-height: 1.2;
+  margin: 18px 0 0;
+  font-weight: 900;
+  animation: rise .6s .1s both;
+}
+
+.actions {
+  width: 100%;
+  display: grid;
+  gap: 18px;
+  margin-top: clamp(50px, 14vh, 110px);
+  animation: rise .7s .2s both;
+}
+
+.big-button {
+  min-height: 90px;
+  border: 5px solid white;
+  background: transparent;
+  color: white;
+  font-size: clamp(27px, 6vw, 44px);
+  font-weight: 900;
+  transition: transform .18s, background .2s;
+}
+
+.big-button:active {
+  transform: scale(.97);
+  background: #ffffff25;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 30px 0 12px;
+  color: #ffffff91;
+  font-size: clamp(15px, 4vw, 24px);
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: scale(.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ОБЩИЕ ЭЛЕМЕНТЫ */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 18px;
+}
+
+.back {
+  width: 46px;
+  height: 46px;
+  border: 2px solid white;
+  border-radius: 14px;
+  background: #ffffff20;
+  color: white;
+  font-size: 26px;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 900;
+}
+
 .panel {
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:20px;padding:18px;margin-bottom:15px;
+  background: white;
+  color: #173c5b;
+  border-radius: 20px;
+  padding: 18px;
 }
-h2 {font-size:18px;margin:0 0 15px}
-p {color:var(--muted);font-size:14px;line-height:1.5}
-.status {display:flex;align-items:center;gap:9px;font-size:14px}
-.dot {width:9px;height:9px;border-radius:50%;background:#74849b}
-.dot.on {background:#25d69b;box-shadow:0 0 12px #25d69b80}
-.primary {
-  display:block;width:100%;padding:17px;border:0;border-radius:15px;
-  margin-top:16px;background:var(--accent);color:white;
-  font-size:16px;font-weight:800;letter-spacing:.5px;
-  box-shadow:0 6px 22px color-mix(in srgb,var(--accent) 24%,transparent);
+
+.field {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid #d5eaf7;
+  border-radius: 13px;
+  margin: 8px 0 16px;
+  background: #f7fcff;
+  color: #173c5b;
+  outline: none;
 }
-.primary:active {transform:scale(.98)}
-.grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.voice {
-  min-height:90px;text-align:left;padding:13px;
-  border:1px solid var(--border);border-radius:14px;
-  background:var(--panel2);
+
+.field:focus {
+  border-color: var(--blue);
 }
-.voice strong {display:block;font-size:14px;margin-bottom:7px}
-.voice small {color:var(--muted);font-size:12px}
-.voice.selected {
-  border:2px solid var(--accent);
-  background:color-mix(in srgb,var(--accent) 13%,var(--panel));
+
+.action {
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 13px;
+  background: #087fdb;
+  color: white;
+  font-weight: 900;
+  transition: transform .15s;
 }
-label {display:block;font-size:14px;margin:19px 0 9px}
-input[type=range] {width:100%;accent-color:var(--accent)}
-select {
-  width:100%;padding:12px;border-radius:12px;
-  color:var(--text);background:var(--panel2);border:1px solid var(--border);
+
+.action:active {
+  transform: scale(.97);
 }
-.secondary {
-  width:100%;padding:13px;border-radius:13px;
-  border:1px solid var(--accent);
-  background:color-mix(in srgb,var(--accent) 10%,var(--panel));
-  color:var(--accent);font-weight:700;margin-top:14px;
+
+.project {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  text-align: left;
+  border: 2px solid #d8eefb;
+  border-radius: 14px;
+  background: #f7fcff;
+  color: #173c5b;
 }
-.note {font-size:12px;color:var(--muted);line-height:1.5}
-.colors {display:flex;flex-wrap:wrap;gap:14px;padding:5px 3px}
-.color {
-  width:34px;height:34px;flex-shrink:0;border-radius:50%;
-  border:2px solid #ffffff45;padding:0;
-  box-shadow:0 3px 9px #00000025;transition:transform .15s;
+
+/* РЕДАКТОР */
+
+#editor {
+  padding: 8px 0 0;
 }
-.color:active {transform:scale(.9)}
-.color.selected {
-  outline:3px solid var(--accent);outline-offset:3px;
-  box-shadow:0 0 13px color-mix(in srgb,var(--accent) 55%,transparent);
+
+.editorbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 12px;
 }
-.setting-row {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;margin-top:18px;
+
+.file-toggle, .run {
+  min-height: 44px;
+  border-radius: 13px;
+  font-weight: 900;
 }
-.small-button {
-  padding:10px 13px;border-radius:11px;
-  border:1px solid var(--border);background:var(--panel2);
+
+.file-toggle {
+  background: #ffffff20;
+  border: 2px solid white;
+  color: white;
+  padding: 0 10px;
 }
-.reset {color:#ff7586}
-.locked {opacity:.65}
-.locked button {width:100%;cursor:not-allowed}
-footer {text-align:center;color:var(--muted);padding:8px 16px 24px;font-size:12px}
-#toast {
-  position:fixed;z-index:10;bottom:20px;left:16px;right:16px;
-  max-width:460px;margin:auto;padding:14px 16px;border-radius:13px;
-  border:1px solid var(--border);background:var(--panel2);
-  color:var(--text);box-shadow:0 8px 30px #0003;display:none;
+
+.filename {
+  flex: 1;
+  min-width: 0;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-@media(min-width:560px) {
-  .grid {grid-template-columns:repeat(3,minmax(0,1fr))}
-  main {padding-top:22px}
+
+.run {
+  border: 0;
+  background: white;
+  color: #008bd5;
+  padding: 0 18px;
+  font-size: 18px;
+  box-shadow: 0 5px #00509a2b;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.run:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px #00509a2b;
+}
+
+.work {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.drawer {
+  width: 145px;
+  flex: 0 0 145px;
+  background: var(--light-blue);
+  padding: 12px 9px;
+  overflow-y: auto;
+  white-space: nowrap;
+  transition: width .28s, flex-basis .28s,
+              padding .28s, opacity .2s;
+}
+
+.drawer.hidden {
+  width: 0;
+  flex-basis: 0;
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.drawer-title {
+  font-weight: 900;
+  margin: 5px 6px 12px;
+}
+
+.file {
+  display: block;
+  width: 100%;
+  padding: 11px 8px;
+  margin: 4px 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: white;
+  text-align: left;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file.selected {
+  background: white;
+  color: #008bd5;
+}
+
+.splitter {
+  width: 12px;
+  flex: 0 0 12px;
+  background: white;
+  position: relative;
+  touch-action: pan-y;
+  cursor: ew-resize;
+}
+
+.splitter::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 45%;
+  height: 10%;
+  width: 6px;
+  border-radius: 8px;
+  background: #d4efff;
+}
+
+.code-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.hint {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.code {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  resize: none;
+  border: 0;
+  outline: none;
+  border-radius: 13px;
+  background: #0084db30;
+  color: var(--green);
+  caret-color: white;
+  padding: 13px;
+  font: 700 14px/1.65 monospace;
+  white-space: pre;
+  overflow: auto;
+  tab-size: 4;
+}
+
+.console {
+  margin-top: 9px;
+  background: white;
+  color: #173c5b;
+  border-radius: 13px;
+  max-height: 24%;
+  min-height: 58px;
+  overflow: auto;
+  padding: 10px;
+  font: 13px/1.45 monospace;
+}
+
+.console-title {
+  font: 900 11px Arial;
+  color: #63839a;
+  margin-bottom: 7px;
+}
+
+.console pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.toast {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translate(-50%, 10px);
+  opacity: 0;
+  background: white;
+  color: #087fc6;
+  border-radius: 14px;
+  padding: 10px 15px;
+  font-weight: 900;
+  transition: .2s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (min-width: 700px) {
+  .drawer {
+    width: 210px;
+    flex-basis: 210px;
+  }
+  .code { font-size: 17px; }
 }
 </style>
 </head>
+
 <body>
-<header>
-  <div>
-    <div class="logo">Voice<span>App</span></div>
-    <div class="version">ALPHA · FOR ANDROID</div>
+
+<!-- ГЛАВНОЕ МЕНЮ -->
+
+<section class="screen active" id="home">
+  <div class="brand">{§}</div>
+
+  <h1 class="welcome">
+    Добро пожаловать<br>
+    в ScriptCode!
+  </h1>
+
+  <div class="actions">
+    <button class="big-button" id="newProject">
+      Новый проект
+    </button>
+
+    <button class="big-button" id="oldProjects">
+      Прошлые проекты
+    </button>
   </div>
-  <button class="icon-button" onclick="scrollSettings()" aria-label="Настройки">⚙️</button>
-</header>
 
-<main>
-  <section class="panel">
-    <div class="status">
-      <span class="dot" id="statusDot"></span>
-      <strong id="statusText">Голос выключен</strong>
-    </div>
-    <p id="statusDescription">Выбери эффект и включи демонстрационный режим.</p>
-    <button class="primary" id="toggleButton" onclick="toggleVoice()">ВКЛЮЧИТЬ</button>
-    <p class="note">Демонстрационный переключатель. Микрофон не используется.</p>
-  </section>
+  <footer class="footer">
+    ScriptCode • Font: Nunito Sans<br>
+    ExtraBold • Trademark: {§}
+  </footer>
+</section>
 
-  <section class="panel">
-    <h2>🎙 Голосовые эффекты · 10</h2>
-    <div class="grid">
-      <button class="voice selected" data-voice="normal" onclick="chooseVoice(this)">
-        <strong>👤 Обычный</strong><small>Без эффекта</small>
-      </button>
-      <button class="voice" data-voice="robot" onclick="chooseVoice(this)">
-        <strong>🤖 Робот</strong><small>Электронный голос</small>
-      </button>
-      <button class="voice" data-voice="deep" onclick="chooseVoice(this)">
-        <strong>🌑 Глубокий</strong><small>Низкий тон</small>
-      </button>
-      <button class="voice" data-voice="cartoon" onclick="chooseVoice(this)">
-        <strong>🐿️ Мультяшный</strong><small>Высокий тон</small>
-      </button>
-      <button class="voice" data-voice="alien" onclick="chooseVoice(this)">
-        <strong>👽 Инопланетянин</strong><small>Космический стиль</small>
-      </button>
-      <button class="voice" data-voice="monster" onclick="chooseVoice(this)">
-        <strong>👹 Монстр</strong><small>Мрачный стиль</small>
-      </button>
-      <button class="voice" data-voice="whisper" onclick="chooseVoice(this)">
-        <strong>🤫 Шёпот</strong><small>Тихий стиль</small>
-      </button>
-      <button class="voice" data-voice="echo" onclick="chooseVoice(this)">
-        <strong>🔊 Эхо</strong><small>Эффект отражения</small>
-      </button>
-      <button class="voice" data-voice="radio" onclick="chooseVoice(this)">
-        <strong>📻 Радио</strong><small>Радиофильтр</small>
-      </button>
-      <button class="voice" data-voice="ghost" onclick="chooseVoice(this)">
-        <strong>👻 Призрак</strong><small>Потусторонний стиль</small>
-      </button>
-    </div>
-  </section>
+<!-- СПИСОК ПРОЕКТОВ -->
 
-  <section class="panel" id="effectSettings">
-    <h2>🎚 Настройки эффекта</h2>
-    <label for="pitch">Высота тона: <span id="pitchValue">100%</span></label>
-    <input id="pitch" type="range" min="50" max="150" value="100">
+<section class="screen" id="projects">
+  <div class="topbar">
+    <button class="back" data-home>‹</button>
+    <div class="title">Прошлые проекты</div>
+  </div>
 
-    <label for="timbre">Тембр: <span id="timbreValue">50%</span></label>
-    <input id="timbre" type="range" min="0" max="100" value="50">
+  <div class="panel">
+    <b>Твои проекты</b>
+    <div id="projectList"></div>
+  </div>
 
-    <label for="speed">Скорость: <span id="speedValue">100%</span></label>
-    <input id="speed" type="range" min="50" max="150" value="100">
+  <button class="action" id="newFromList"
+          style="margin-top:14px">
+    ＋ Новый проект
+  </button>
+</section>
 
-    <button class="secondary" onclick="testVoice()">🎙 Проверить голос</button>
-    <p class="note">Проверка пока демонстрационная. Микрофон не включается.</p>
-  </section>
+<!-- СОЗДАНИЕ ПРОЕКТА -->
 
-  <section class="panel" id="settings">
-    <h2>⚙️ Настройки приложения</h2>
-    <label>Цвет акцента</label>
-    <div class="colors" id="colorPicker">
-      <button class="color selected" style="background:#3984ff" data-color="#3984ff" onclick="setColor(this)" aria-label="Синий"></button>
-      <button class="color" style="background:#38bdf8" data-color="#38bdf8" onclick="setColor(this)" aria-label="Небесный"></button>
-      <button class="color" style="background:#6366f1" data-color="#6366f1" onclick="setColor(this)" aria-label="Индиго"></button>
-      <button class="color" style="background:#8b5cf6" data-color="#8b5cf6" onclick="setColor(this)" aria-label="Фиолетовый"></button>
-      <button class="color" style="background:#d946ef" data-color="#d946ef" onclick="setColor(this)" aria-label="Маджента"></button>
-      <button class="color" style="background:#f472b6" data-color="#f472b6" onclick="setColor(this)" aria-label="Розовый"></button>
-      <button class="color" style="background:#f43f5e" data-color="#f43f5e" onclick="setColor(this)" aria-label="Красный"></button>
-      <button class="color" style="background:#fb7185" data-color="#fb7185" onclick="setColor(this)" aria-label="Коралловый"></button>
-      <button class="color" style="background:#f97316" data-color="#f97316" onclick="setColor(this)" aria-label="Оранжевый"></button>
-      <button class="color" style="background:#fbbf24" data-color="#fbbf24" onclick="setColor(this)" aria-label="Янтарный"></button>
-      <button class="color" style="background:#a3e635" data-color="#a3e635" onclick="setColor(this)" aria-label="Лаймовый"></button>
-      <button class="color" style="background:#22c55e" data-color="#22c55e" onclick="setColor(this)" aria-label="Зелёный"></button>
-      <button class="color" style="background:#10b981" data-color="#10b981" onclick="setColor(this)" aria-label="Изумрудный"></button>
-      <button class="color" style="background:#14b8a6" data-color="#14b8a6" onclick="setColor(this)" aria-label="Бирюзовый"></button>
-      <button class="color" style="background:#64748b" data-color="#64748b" onclick="setColor(this)" aria-label="Сланцевый"></button>
-      <button class="color" style="background:#e2e8f0" data-color="#e2e8f0" onclick="setColor(this)" aria-label="Серебристый"></button>
-    </div>
+<section class="screen" id="create">
+  <div class="topbar">
+    <button class="back" data-home>‹</button>
+    <div class="title">Новый проект</div>
+  </div>
 
-    <label for="theme">Тема оформления</label>
-    <select id="theme">
-      <option value="dark">🌙 Тёмная</option>
-      <option value="light">☁️ Мягкая светлая</option>
+  <div class="panel">
+    <label for="projectName"><b>Название проекта</b></label>
+    <input class="field" id="projectName" value="Мой проект">
+
+    <label for="language"><b>Язык программирования</b></label>
+    <select class="field" id="language">
+      <option>Python</option>
+      <option disabled>Другие языки — скоро</option>
     </select>
 
-    <label for="volume">Громкость интерфейса: <span id="volumeValue">70%</span></label>
-    <input id="volume" type="range" min="0" max="100" value="70">
-    <p class="note">Громкость пока сохраняется как настройка; звуки интерфейса не подключены.</p>
+    <button class="action" id="createButton"
+            style="width:100%">
+      Создать проект →
+    </button>
+  </div>
+</section>
 
-    <div class="setting-row">
-      <span>Сбросить настройки</span>
-      <button class="small-button reset" onclick="resetSettings()">Сбросить</button>
+<!-- РЕДАКТОР -->
+
+<section class="screen" id="editor">
+
+  <div class="editorbar">
+    <button class="file-toggle" id="toggleFiles">
+      ‹ Файлы
+    </button>
+
+    <div class="filename" id="filename">main.py</div>
+
+    <button class="run" id="runButton">▶ Start</button>
+  </div>
+
+  <div class="work">
+
+    <aside class="drawer" id="drawer">
+      <div class="drawer-title">Тут файлы</div>
+
+      <button class="file selected" data-file="main.py">
+        ▤ main.py
+      </button>
+
+      <button class="file" data-file="game.py">
+        ▤ game.py
+      </button>
+
+      <button class="file" data-file="utils.py">
+        ▤ utils.py
+      </button>
+
+      <button class="file" id="addFile">
+        ＋ Новый файл
+      </button>
+    </aside>
+
+    <div class="splitter" id="splitter"></div>
+
+    <div class="code-side">
+      <div class="hint">
+        Редактор Python · прокручивай код отдельно
+      </div>
+
+      <textarea class="code" id="code"
+        spellcheck="false"
+        autocapitalize="off"
+        autocomplete="off">import random
+
+secret = random.randint(1, 100)
+attempts = 0
+
+print("Угадай число!")
+print("Я загадал число от 1 до 100.")
+
+while True:
+    guess = input("Твой ответ: ")
+
+    if not guess.isdigit():
+        print("Введи целое число!")
+        continue
+
+    guess = int(guess)
+    attempts += 1
+
+    if guess < secret:
+        print("Моё число больше!")
+    elif guess > secret:
+        print("Моё число меньше!")
+    else:
+        print("Ты угадал!")
+        print("Попыток:", attempts)
+        break</textarea>
+
+      <div class="console">
+        <div class="console-title">РЕЗУЛЬТАТ / DEMO</div>
+        <pre id="output">Нажми Start, чтобы посмотреть результат.
+Этот HTML-макет пока не исполняет Python.</pre>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <section class="panel locked">
-    <h2>👑 Свои голоса</h2>
-    <p>Создание собственных эффектов появится в Beta.</p>
-    <button class="small-button" disabled>🔒 Доступно в Beta</button>
-  </section>
+  <div class="bottom">
+    <span id="status">● Готово</span>
+    <span id="lineCount">Строки: 21</span>
+  </div>
 
-  <footer>VoiceApp Alpha · for Android</footer>
-</main>
-
-<div id="toast" role="status" aria-live="polite"></div>
+  <div class="toast" id="toast">Файлы скрыты</div>
+</section>
 
 <script>
-let enabled = false;
-let selectedVoice = "normal";
-let toastTimer;
+const screens = [...document.querySelectorAll(".screen")];
 
-const voiceNames = {
-  normal:"Обычный",
-  robot:"Робот",
-  deep:"Глубокий",
-  cartoon:"Мультяшный",
-  alien:"Инопланетянин",
-  monster:"Монстр",
-  whisper:"Шёпот",
-  echo:"Эхо",
-  radio:"Радио",
-  ghost:"Призрак"
+function showScreen(id) {
+  screens.forEach(screen =>
+    screen.classList.toggle("active", screen.id === id)
+  );
+}
+
+const $ = id => document.getElementById(id);
+
+let projects = JSON.parse(
+  localStorage.getItem("scriptcode-projects") || "[]"
+);
+
+let files = {
+  "main.py": $("code").value,
+  "game.py": 'print("Игра запускается!")',
+  "utils.py": 'def hello(name):\\n    return f"Привет, {name}!"'
 };
 
+let currentFile = "main.py";
+let filesVisible = true;
+
 function toast(message) {
-  const box = document.getElementById("toast");
-  box.textContent = message;
-  box.style.display = "block";
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => box.style.display = "none", 2600);
+  $("toast").textContent = message;
+  $("toast").classList.add("show");
+
+  setTimeout(() => {
+    $("toast").classList.remove("show");
+  }, 1400);
 }
 
-function toggleVoice() {
-  enabled = !enabled;
-  document.getElementById("statusDot").classList.toggle("on", enabled);
-  document.getElementById("statusText").textContent =
-    enabled ? "Демонстрация включена" : "Голос выключен";
-  document.getElementById("statusDescription").textContent =
-    enabled
-      ? "Режим включён. Обработка голоса пока не подключена."
-      : "Выбери эффект и включи демонстрационный режим.";
-  document.getElementById("toggleButton").textContent =
-    enabled ? "ВЫКЛЮЧИТЬ" : "ВКЛЮЧИТЬ";
-  toast(enabled ? "Демонстрационный режим включён" : "Режим выключен");
+function saveCurrentFile() {
+  files[currentFile] = $("code").value;
+
+  $("lineCount").textContent =
+    "Строки: " + $("code").value.split("\\n").length;
+
+  $("status").textContent = "● Сохранено в демо";
 }
 
-function chooseVoice(button) {
-  document.querySelectorAll(".voice").forEach(item =>
-    item.classList.remove("selected")
-  );
-  button.classList.add("selected");
-  selectedVoice = button.dataset.voice;
-  toast("Выбран эффект: " + voiceNames[selectedVoice]);
-  saveSettings();
+function toggleDrawer(visible) {
+  filesVisible = visible;
+
+  $("drawer").classList.toggle("hidden", !visible);
+  $("splitter").style.display = visible ? "block" : "none";
+
+  $("toggleFiles").textContent =
+    visible ? "‹ Файлы" : "Файлы ›";
+
+  toast(visible ? "Файлы показаны" : "Файлы скрыты");
 }
 
-function testVoice() {
-  toast("Выбран эффект «" + voiceNames[selectedVoice] +
-    "». Настоящая проверка будет добавлена позже.");
-}
+function switchFile(name) {
+  saveCurrentFile();
 
-function setColor(button) {
-  document.documentElement.style.setProperty("--accent", button.dataset.color);
-  document.querySelectorAll(".color").forEach(item =>
-    item.classList.toggle("selected", item === button)
-  );
-  saveSettings();
-}
+  currentFile = name;
 
-function setTheme(theme) {
-  const root = document.documentElement;
-  if (theme === "light") {
-    root.style.setProperty("--bg", "#dce5f0");
-    root.style.setProperty("--panel", "#edf2f8");
-    root.style.setProperty("--panel2", "#e3eaf3");
-    root.style.setProperty("--text", "#24364d");
-    root.style.setProperty("--muted", "#647991");
-    root.style.setProperty("--border", "#c1cede");
-  } else {
-    root.style.setProperty("--bg", "#091321");
-    root.style.setProperty("--panel", "#111f33");
-    root.style.setProperty("--panel2", "#172941");
-    root.style.setProperty("--text", "#edf4ff");
-    root.style.setProperty("--muted", "#93a8c4");
-    root.style.setProperty("--border", "#263a55");
+  if (!(name in files)) {
+    files[name] = "# " + name + "\\n";
   }
-  saveSettings();
+
+  $("code").value = files[name];
+  $("filename").textContent = name;
+
+  document.querySelectorAll("[data-file]").forEach(button => {
+    button.classList.toggle(
+      "selected",
+      button.dataset.file === name
+    );
+  });
+
+  saveCurrentFile();
 }
 
-function updateRange(id) {
-  document.getElementById(id + "Value").textContent =
-    document.getElementById(id).value + "%";
-  saveSettings();
-}
+function refreshProjects() {
+  const list = $("projectList");
+  list.innerHTML = "";
 
-function scrollSettings() {
-  document.getElementById("settings").scrollIntoView({
-    behavior:"smooth", block:"start"
+  if (projects.length === 0) {
+    list.textContent = "Пока нет сохранённых проектов.";
+    return;
+  }
+
+  projects.forEach(project => {
+    const button = document.createElement("button");
+    button.className = "project";
+    button.textContent = "{§}  " + project.name;
+
+    button.onclick = () => {
+      showScreen("editor");
+    };
+
+    list.appendChild(button);
   });
 }
 
-function saveSettings() {
-  const settings = {
-    color:getComputedStyle(document.documentElement)
-      .getPropertyValue("--accent").trim(),
-    theme:document.getElementById("theme").value,
-    pitch:document.getElementById("pitch").value,
-    timbre:document.getElementById("timbre").value,
-    speed:document.getElementById("speed").value,
-    volume:document.getElementById("volume").value,
-    voice:selectedVoice
-  };
-  try {
-    localStorage.setItem("voiceAppSettings", JSON.stringify(settings));
-  } catch (e) {}
-}
+$("newProject").onclick = () => showScreen("create");
 
-function loadSettings() {
-  let s;
-  try {
-    s = JSON.parse(localStorage.getItem("voiceAppSettings") || "null");
-  } catch (e) { s = null; }
-  if (!s) return;
+$("oldProjects").onclick = () => {
+  refreshProjects();
+  showScreen("projects");
+};
 
-  if (s.color) {
-    document.documentElement.style.setProperty("--accent", s.color);
-    document.querySelectorAll(".color").forEach(button => {
-      button.classList.toggle("selected", button.dataset.color === s.color);
-    });
-  }
+$("newFromList").onclick = () => showScreen("create");
 
-  if (s.theme) {
-    document.getElementById("theme").value = s.theme;
-    setTheme(s.theme);
-  }
-
-  ["pitch","timbre","speed","volume"].forEach(id => {
-    if (s[id] !== undefined) {
-      document.getElementById(id).value = s[id];
-      updateRange(id);
-    }
-  });
-
-  if (s.voice && voiceNames[s.voice]) {
-    selectedVoice = s.voice;
-    document.querySelectorAll(".voice").forEach(button => {
-      button.classList.toggle("selected", button.dataset.voice === selectedVoice);
-    });
-  }
-}
-
-function resetSettings() {
-  try { localStorage.removeItem("voiceAppSettings"); } catch (e) {}
-  location.reload();
-}
-
-document.getElementById("theme").addEventListener("change", e => setTheme(e.target.value));
-
-["pitch","timbre","speed","volume"].forEach(id => {
-  document.getElementById(id).addEventListener("input", () => updateRange(id));
+document.querySelectorAll("[data-home]").forEach(button => {
+  button.onclick = () => showScreen("home");
 });
 
-loadSettings();
+$("createButton").onclick = () => {
+  const name = $("projectName").value.trim() || "Мой проект";
+
+  projects.push({ name });
+
+  localStorage.setItem(
+    "scriptcode-projects",
+    JSON.stringify(projects)
+  );
+
+  showScreen("editor");
+  toggleDrawer(true);
+  switchFile("main.py");
+};
+
+document.querySelectorAll("[data-file]").forEach(button => {
+  button.onclick = () => switchFile(button.dataset.file);
+});
+
+$("addFile").onclick = () => {
+  let name = prompt("Имя файла, например notes.py");
+
+  if (!name) return;
+
+  if (!name.endsWith(".py")) name += ".py";
+
+  files[name] = "# " + name + "\\n";
+
+  const button = document.createElement("button");
+  button.className = "file";
+  button.dataset.file = name;
+  button.textContent = "▤ " + name;
+
+  button.onclick = () => switchFile(name);
+
+  $("addFile").before(button);
+  switchFile(name);
+};
+
+$("code").addEventListener("input", saveCurrentFile);
+
+$("toggleFiles").onclick = () => {
+  toggleDrawer(!filesVisible);
+};
+
+/* Перетаскивание разделителя файлов */
+
+let startX = null;
+
+$("splitter").addEventListener("pointerdown", event => {
+  startX = event.clientX;
+  $("splitter").setPointerCapture(event.pointerId);
+});
+
+$("splitter").addEventListener("pointerup", event => {
+  if (startX === null) return;
+
+  const difference = event.clientX - startX;
+
+  if (difference < -25) toggleDrawer(false);
+  if (difference > 25) toggleDrawer(true);
+
+  startX = null;
+});
+
+/* Кнопка запуска демонстрации */
+
+$("runButton").onclick = () => {
+  saveCurrentFile();
+
+  $("output").textContent =
+    "▶ Запуск демо\\n\\n" +
+    "Интерфейс работает!\\n" +
+    "Настоящий запуск Python нужно подключить отдельно.";
+
+  toast("Демо запущено");
+};
 </script>
+
 </body>
 </html>
