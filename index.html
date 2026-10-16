@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,756 +7,784 @@
 <title>ScriptCode</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
 :root {
-  --blue: #08a9f5;
-  --light-blue: #35c6f3;
-  --green: #008d24;
-  --white: #ffffff;
+  --blue: #079ff5;
+  --blue-dark: #0877e8;
+  --light: #eaf7ff;
+  --text: #07509a;
+  --border: #c8eaff;
+  --white: #fff;
 }
-
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: "Nunito Sans", Arial, sans-serif;
-  background: var(--blue);
-  color: white;
-  overflow: hidden;
+  background: #eef8ff;
+  color: var(--text);
+  font-family: "Nunito Sans", "Arial", sans-serif;
 }
-
-button, input, textarea, select {
-  font: inherit;
-}
-
+button, input, textarea, select { font: inherit; }
 button {
   cursor: pointer;
+  border: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .22s ease, box-shadow .3s ease,
+              background .3s ease, opacity .25s ease;
 }
-
-.screen {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 18px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(12px);
-  transition: opacity .3s, transform .3s;
+button:active { transform: scale(.96); }
+button:focus-visible, textarea:focus-visible,
+input:focus-visible, select:focus-visible {
+  outline: 3px solid #75caff;
+  outline-offset: 2px;
 }
-
-.screen.active {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
+.app {
+  max-width: 680px;
+  min-height: 100dvh;
+  margin: auto;
+  background: var(--white);
+  overflow: hidden;
 }
-
-/* ГЛАВНОЕ МЕНЮ */
-
-#home {
-  align-items: center;
-  text-align: center;
-  padding-top: 24px;
-  overflow-y: auto;
-}
-
-.brand {
-  font-size: clamp(90px, 22vw, 145px);
-  font-weight: 900;
-  letter-spacing: -8px;
-  animation: appear .7s ease both;
-}
-
-.welcome {
-  font-size: clamp(30px, 7vw, 48px);
-  line-height: 1.2;
-  margin: 18px 0 0;
-  font-weight: 900;
-  animation: rise .6s .1s both;
-}
-
-.actions {
-  width: 100%;
-  display: grid;
-  gap: 18px;
-  margin-top: clamp(50px, 14vh, 110px);
-  animation: rise .7s .2s both;
-}
-
-.big-button {
-  min-height: 90px;
-  border: 5px solid white;
-  background: transparent;
+.top {
+  background: linear-gradient(135deg, #08aaff, #0879ec);
   color: white;
-  font-size: clamp(27px, 6vw, 44px);
-  font-weight: 900;
-  transition: transform .18s, background .2s;
+  padding: 17px 18px 25px;
+  border-radius: 0 0 28px 28px;
 }
-
-.big-button:active {
-  transform: scale(.97);
-  background: #ffffff25;
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
-
-.footer {
-  margin-top: auto;
-  padding: 30px 0 12px;
-  color: #ffffff91;
-  font-size: clamp(15px, 4vw, 24px);
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 19px;
   font-weight: 900;
+}
+.logo-img {
+  width: 46px;
+  height: 46px;
+  object-fit: cover;
+  border-radius: 15px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px #0055a52b;
+}
+.icon-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  color: white;
+  background: #ffffff22;
+  box-shadow: inset 0 0 0 1px #ffffff55;
+  font-size: 23px;
+}
+.hero {
+  text-align: center;
+  padding: 30px 8px 12px;
+  animation: appear .55s ease both;
+}
+.hero .logo-img {
+  display: block;
+  width: 112px;
+  height: 112px;
+  border-radius: 30px;
+  margin: 0 auto 17px;
+}
+h1 { margin: 0; font-size: 32px; font-weight: 900; }
+.subtitle { margin-top: 8px; opacity: .92; }
+.content { padding: 20px; }
+.big-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 17px 20px;
+  margin: 12px 0;
+  border-radius: 26px;
+  color: white;
+  background: linear-gradient(110deg, #0aaaff, #0878ed);
+  box-shadow: 0 6px 17px #078cf52b;
+  font-weight: 800;
+}
+.big-btn:hover { box-shadow: 0 10px 24px #078cf545; }
+.big-btn .left { display: flex; align-items: center; gap: 12px; }
+.big-btn .symbol { font-size: 23px; }
+.outline-btn {
+  color: var(--blue-dark);
+  background: white;
+  box-shadow: inset 0 0 0 2px #9bdcff;
+}
+.small-muted {
+  color: #75a0c3;
+  font-size: 12px;
+  text-align: center;
   line-height: 1.5;
 }
-
+.page { display: none; }
+.page.active { display: block; animation: appear .32s ease both; }
 @keyframes appear {
-  from { opacity: 0; transform: scale(.8); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0; transform: translateY(9px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-/* ОБЩИЕ ЭЛЕМЕНТЫ */
-
-.topbar {
+.section-title { font-size: 21px; font-weight: 900; margin: 5px 0 17px; }
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 5px 18px #0069b50b;
+  margin-bottom: 14px;
+}
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  margin: 14px 0 7px;
+}
+.input {
+  width: 100%;
+  padding: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 17px;
+  background: #f7fcff;
+  color: var(--text);
+}
+select.input { cursor: pointer; }
+.project {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 0 18px;
-}
-
-.back {
-  width: 46px;
-  height: 46px;
-  border: 2px solid white;
-  border-radius: 14px;
-  background: #ffffff20;
-  color: white;
-  font-size: 26px;
-}
-
-.title {
-  font-size: 25px;
-  font-weight: 900;
-}
-
-.panel {
-  background: white;
-  color: #173c5b;
-  border-radius: 20px;
-  padding: 18px;
-}
-
-.field {
-  width: 100%;
-  padding: 13px;
-  border: 2px solid #d5eaf7;
-  border-radius: 13px;
-  margin: 8px 0 16px;
-  background: #f7fcff;
-  color: #173c5b;
-  outline: none;
-}
-
-.field:focus {
-  border-color: var(--blue);
-}
-
-.action {
-  padding: 14px 18px;
-  border: 0;
-  border-radius: 13px;
-  background: #087fdb;
-  color: white;
-  font-weight: 900;
-  transition: transform .15s;
-}
-
-.action:active {
-  transform: scale(.97);
-}
-
-.project {
-  display: block;
-  width: 100%;
-  margin-top: 10px;
-  padding: 14px;
   text-align: left;
-  border: 2px solid #d8eefb;
-  border-radius: 14px;
-  background: #f7fcff;
-  color: #173c5b;
+  padding: 12px;
+  margin: 9px 0;
+  border-radius: 19px;
+  background: #eff9ff;
+  color: var(--text);
 }
-
-/* РЕДАКТОР */
-
-#editor {
-  padding: 8px 0 0;
-}
-
-.editorbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px 12px;
-}
-
-.file-toggle, .run {
-  min-height: 44px;
-  border-radius: 13px;
-  font-weight: 900;
-}
-
-.file-toggle {
-  background: #ffffff20;
-  border: 2px solid white;
+.project:hover { background: #dff2ff; }
+.project .logo-img { width: 45px; height: 45px; }
+.project-info { flex: 1; min-width: 0; }
+.project-name { font-weight: 900; overflow-wrap: anywhere; }
+.project-date { font-size: 12px; color: #78a0c1; margin-top: 4px; }
+.arrow { font-size: 22px; color: var(--blue); }
+.editor-top {
+  padding: 13px 15px;
+  background: linear-gradient(135deg, #08aaff, #0879ec);
   color: white;
-  padding: 0 10px;
 }
-
-.filename {
-  flex: 1;
-  min-width: 0;
-  font-weight: 900;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.run {
-  border: 0;
-  background: white;
-  color: #008bd5;
-  padding: 0 18px;
-  font-size: 18px;
-  box-shadow: 0 5px #00509a2b;
-  transition: transform .15s, box-shadow .15s;
-}
-
-.run:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px #00509a2b;
-}
-
-.work {
+.editor-brand { font-size: 16px; }
+.editor-layout {
   display: flex;
-  flex: 1;
-  min-height: 0;
+  align-items: stretch;
+  min-height: 310px;
+  height: min(52dvh, 490px);
+  background: #052b4d;
   overflow: hidden;
 }
-
-.drawer {
-  width: 145px;
-  flex: 0 0 145px;
-  background: var(--light-blue);
-  padding: 12px 9px;
+.files {
+  flex: 0 0 126px;
+  min-width: 0;
+  padding: 10px 7px;
+  background: #087fc9;
+  color: white;
   overflow-y: auto;
-  white-space: nowrap;
-  transition: width .28s, flex-basis .28s,
-              padding .28s, opacity .2s;
+  transition: flex-basis .3s ease, padding .3s ease, opacity .25s ease;
 }
-
-.drawer.hidden {
-  width: 0;
+.files.hidden {
   flex-basis: 0;
   padding-left: 0;
   padding-right: 0;
   opacity: 0;
   overflow: hidden;
 }
-
-.drawer-title {
+.files-title {
+  font-size: 12px;
   font-weight: 900;
-  margin: 5px 6px 12px;
+  padding: 3px 5px 9px;
 }
-
-.file {
-  display: block;
+.file-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   width: 100%;
   padding: 11px 8px;
-  margin: 4px 0;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
+  border-radius: 14px;
+  margin-bottom: 5px;
   color: white;
+  background: transparent;
   text-align: left;
-  font-weight: 800;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 12px;
+  overflow-wrap: anywhere;
 }
-
-.file.selected {
-  background: white;
-  color: #008bd5;
+.file-btn.active { background: #ffffff28; }
+.file-btn:hover { background: #ffffff1c; }
+.add-file {
+  width: 100%;
+  padding: 10px 5px;
+  border-radius: 17px;
+  color: white;
+  background: #ffffff24;
+  font-size: 12px;
+  margin-top: 6px;
 }
-
-.splitter {
-  width: 12px;
-  flex: 0 0 12px;
-  background: white;
+.dragbar {
+  flex: 0 0 9px;
+  cursor: col-resize;
+  background: #06406b;
   position: relative;
-  touch-action: pan-y;
-  cursor: ew-resize;
+  touch-action: none;
 }
-
-.splitter::after {
+.dragbar:after {
   content: "";
   position: absolute;
-  left: 3px;
-  top: 45%;
-  height: 10%;
-  width: 6px;
-  border-radius: 8px;
-  background: #d4efff;
+  width: 4px;
+  height: 42px;
+  left: 2px;
+  top: calc(50% - 21px);
+  border-radius: 9px;
+  background: #a5ddff;
 }
-
-.code-side {
+.code-area {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  padding: 10px;
 }
-
-.hint {
-  text-align: center;
+.file-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: white;
+  background: #073a64;
   font-size: 12px;
-  font-weight: 800;
-  margin: 0 0 8px;
 }
-
+.toggle-files {
+  color: white;
+  background: #ffffff20;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+}
 .code {
   flex: 1;
   min-height: 0;
   width: 100%;
   resize: none;
   border: 0;
-  outline: none;
-  border-radius: 13px;
-  background: #0084db30;
-  color: var(--green);
+  outline: 0;
+  padding: 13px 12px;
+  background: #052b4d;
+  color: #bcecff;
   caret-color: white;
-  padding: 13px;
-  font: 700 14px/1.65 monospace;
+  font: 12px/1.75 "Courier New", monospace;
+  tab-size: 4;
   white-space: pre;
   overflow: auto;
-  tab-size: 4;
 }
-
 .console {
-  margin-top: 9px;
-  background: white;
-  color: #173c5b;
-  border-radius: 13px;
-  max-height: 24%;
-  min-height: 58px;
-  overflow: auto;
-  padding: 10px;
-  font: 13px/1.45 monospace;
+  background: #f4fbff;
+  border: 1px solid var(--border);
+  border-radius: 19px;
+  padding: 12px 14px;
+  margin: 12px 14px 0;
+  min-height: 65px;
 }
-
-.console-title {
-  font: 900 11px Arial;
-  color: #63839a;
-  margin-bottom: 7px;
-}
-
-.console pre {
-  margin: 0;
-  white-space: pre-wrap;
-}
-
-.bottom {
-  display: flex;
-  justify-content: space-between;
-  padding: 9px 12px;
+.console-title { font-size: 12px; font-weight: 900; margin-bottom: 7px; }
+.console-output {
+  color: #6792b5;
   font-size: 12px;
-  font-weight: 800;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
-
-.toast {
-  position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translate(-50%, 10px);
-  opacity: 0;
+.bottom-bar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 14px 18px;
+}
+.save-status {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 11px;
+  border-radius: 22px;
+  color: white;
+  background: linear-gradient(110deg, #0aaaff, #0878ed);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #40ee91;
+  box-shadow: 0 0 8px #40ee91aa;
+}
+.dot.saving {
+  background: #ffd65b;
+  box-shadow: 0 0 8px #ffd65b99;
+  animation: pulse .7s ease infinite alternate;
+}
+@keyframes pulse { to { opacity: .35; } }
+.start-btn {
+  border-radius: 25px;
+  padding: 13px 19px;
+  color: #0879ec;
   background: white;
-  color: #087fc6;
-  border-radius: 14px;
-  padding: 10px 15px;
+  box-shadow: inset 0 0 0 1px #cceaff, 0 4px 12px #006bb51a;
   font-weight: 900;
-  transition: .2s;
-  pointer-events: none;
   white-space: nowrap;
 }
-
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
+.start-btn:disabled { opacity: .55; cursor: wait; }
+.settings-row {
+  padding: 15px 0;
+  border-bottom: 1px solid #e3f3ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
-
-@media (min-width: 700px) {
-  .drawer {
-    width: 210px;
-    flex-basis: 210px;
-  }
-  .code { font-size: 17px; }
+@media (max-width: 390px) {
+  .content { padding: 14px; }
+  .files { flex-basis: 105px; }
+  .save-status { font-size: 11px; }
+  .start-btn { padding: 12px 14px; }
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<!-- ГЛАВНОЕ МЕНЮ -->
-
-<section class="screen active" id="home">
-  <div class="brand">{§}</div>
-
-  <h1 class="welcome">
-    Добро пожаловать<br>
-    в ScriptCode!
-  </h1>
-
-  <div class="actions">
-    <button class="big-button" id="newProject">
-      Новый проект
-    </button>
-
-    <button class="big-button" id="oldProjects">
-      Прошлые проекты
-    </button>
-  </div>
-
-  <footer class="footer">
-    ScriptCode • Font: Nunito Sans<br>
-    ExtraBold • Trademark: {§}
-  </footer>
-</section>
-
-<!-- СПИСОК ПРОЕКТОВ -->
-
-<section class="screen" id="projects">
-  <div class="topbar">
-    <button class="back" data-home>‹</button>
-    <div class="title">Прошлые проекты</div>
-  </div>
-
-  <div class="panel">
-    <b>Твои проекты</b>
-    <div id="projectList"></div>
-  </div>
-
-  <button class="action" id="newFromList"
-          style="margin-top:14px">
-    ＋ Новый проект
-  </button>
-</section>
-
-<!-- СОЗДАНИЕ ПРОЕКТА -->
-
-<section class="screen" id="create">
-  <div class="topbar">
-    <button class="back" data-home>‹</button>
-    <div class="title">Новый проект</div>
-  </div>
-
-  <div class="panel">
-    <label for="projectName"><b>Название проекта</b></label>
-    <input class="field" id="projectName" value="Мой проект">
-
-    <label for="language"><b>Язык программирования</b></label>
-    <select class="field" id="language">
-      <option>Python</option>
-      <option disabled>Другие языки — скоро</option>
-    </select>
-
-    <button class="action" id="createButton"
-            style="width:100%">
-      Создать проект →
-    </button>
-  </div>
-</section>
-
-<!-- РЕДАКТОР -->
-
-<section class="screen" id="editor">
-
-  <div class="editorbar">
-    <button class="file-toggle" id="toggleFiles">
-      ‹ Файлы
-    </button>
-
-    <div class="filename" id="filename">main.py</div>
-
-    <button class="run" id="runButton">▶ Start</button>
-  </div>
-
-  <div class="work">
-
-    <aside class="drawer" id="drawer">
-      <div class="drawer-title">Тут файлы</div>
-
-      <button class="file selected" data-file="main.py">
-        ▤ main.py
-      </button>
-
-      <button class="file" data-file="game.py">
-        ▤ game.py
-      </button>
-
-      <button class="file" data-file="utils.py">
-        ▤ utils.py
-      </button>
-
-      <button class="file" id="addFile">
-        ＋ Новый файл
-      </button>
-    </aside>
-
-    <div class="splitter" id="splitter"></div>
-
-    <div class="code-side">
-      <div class="hint">
-        Редактор Python · прокручивай код отдельно
+  <!-- Главная -->
+  <section class="page active" id="home">
+    <div class="top">
+      <div class="bar">
+        <div class="brand">
+          <img class="logo-img" src="8942.jpg" alt="ScriptCode">
+          ScriptCode
+        </div>
+        <button class="icon-btn" onclick="showPage('settings')" aria-label="Настройки">⚙</button>
       </div>
-
-      <textarea class="code" id="code"
-        spellcheck="false"
-        autocapitalize="off"
-        autocomplete="off">import random
-
-secret = random.randint(1, 100)
-attempts = 0
-
-print("Угадай число!")
-print("Я загадал число от 1 до 100.")
-
-while True:
-    guess = input("Твой ответ: ")
-
-    if not guess.isdigit():
-        print("Введи целое число!")
-        continue
-
-    guess = int(guess)
-    attempts += 1
-
-    if guess < secret:
-        print("Моё число больше!")
-    elif guess > secret:
-        print("Моё число меньше!")
-    else:
-        print("Ты угадал!")
-        print("Попыток:", attempts)
-        break</textarea>
-
-      <div class="console">
-        <div class="console-title">РЕЗУЛЬТАТ / DEMO</div>
-        <pre id="output">Нажми Start, чтобы посмотреть результат.
-Этот HTML-макет пока не исполняет Python.</pre>
+      <div class="hero">
+        <img class="logo-img" src="8942.jpg" alt="Аватарка ScriptCode">
+        <h1>ScriptCode</h1>
+        <div class="subtitle">Пиши. Создавай. Запускай.</div>
       </div>
     </div>
-  </div>
+    <div class="content">
+      <button class="big-btn" onclick="showPage('create')">
+        <span class="left"><span class="symbol">＋</span>Новый проект</span>
+        <span>→</span>
+      </button>
+      <button class="big-btn outline-btn" onclick="renderProjects()">
+        <span class="left"><span class="symbol">▱</span>Прошлые проекты</span>
+        <span>→</span>
+      </button>
+      <p class="small-muted">ScriptCode • Font: Nunito Sans ExtraBold<br>Trademark: {§}</p>
+    </div>
+  </section>
 
-  <div class="bottom">
-    <span id="status">● Готово</span>
-    <span id="lineCount">Строки: 21</span>
-  </div>
+  <!-- Создание проекта -->
+  <section class="page" id="create">
+    <div class="top">
+      <div class="bar">
+        <button class="icon-btn" onclick="showPage('home')">‹</button>
+        <b>Новый проект</b>
+        <img class="logo-img" src="8942.jpg" alt="ScriptCode">
+      </div>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="section-title">Создание проекта</div>
+        <label for="projectName">Название проекта</label>
+        <input class="input" id="projectName" placeholder="Мой проект" maxlength="60">
+        <label for="language">Язык программирования</label>
+        <select class="input" id="language">
+          <option value="Python">Python</option>
+          <option value="JavaScript">JavaScript (скоро)</option>
+          <option value="HTML">HTML (скоро)</option>
+        </select>
+        <button class="big-btn" onclick="createProject()">Создать проект →</button>
+      </div>
+      <p class="small-muted">Другие языки добавим в следующих версиях.</p>
+    </div>
+  </section>
 
-  <div class="toast" id="toast">Файлы скрыты</div>
-</section>
+  <!-- Проекты -->
+  <section class="page" id="projects">
+    <div class="top">
+      <div class="bar">
+        <button class="icon-btn" onclick="showPage('home')">‹</button>
+        <b>Прошлые проекты</b>
+        <button class="icon-btn" onclick="showPage('settings')">⚙</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="section-title">Ваши проекты</div>
+      <div id="projectList"></div>
+      <button class="big-btn" onclick="showPage('create')">＋ Новый проект</button>
+    </div>
+  </section>
+
+  <!-- Редактор -->
+  <section class="page" id="editor">
+    <div class="editor-top">
+      <div class="bar">
+        <button class="icon-btn" onclick="leaveEditor()">‹</button>
+        <div class="brand editor-brand">
+          <img class="logo-img" src="8942.jpg" alt="ScriptCode">
+          ScriptCode
+        </div>
+        <button class="icon-btn" onclick="showPage('settings')">⚙</button>
+      </div>
+      <div id="editorProjectName" style="font-size:12px;opacity:.9;margin:12px 2px 0"></div>
+    </div>
+
+    <div class="editor-layout">
+      <aside class="files" id="filesPanel">
+        <div class="files-title">ФАЙЛЫ</div>
+        <div id="fileList"></div>
+        <button class="add-file" onclick="addFile()">＋ Новый файл</button>
+      </aside>
+
+      <div class="dragbar" id="dragbar" title="Перетащи, чтобы скрыть или показать файлы"></div>
+
+      <div class="code-area">
+        <div class="file-tab">
+          <button class="toggle-files" onclick="toggleFiles()" title="Показать или скрыть файлы">☰</button>
+          <span id="activeFileName">main.py</span>
+        </div>
+        <textarea id="code" class="code" spellcheck="false"
+          autocapitalize="off" autocomplete="off"
+          aria-label="Редактор кода"
+          oninput="codeChanged()"
+          onkeydown="handleTab(event)"></textarea>
+      </div>
+    </div>
+
+    <div class="console">
+      <div class="console-title">Результат / Консоль</div>
+      <div class="console-output" id="consoleOutput">Нажми «Старт», чтобы посмотреть результат.
+Это HTML-макет, настоящий запуск Python пока не подключён.</div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="save-status" aria-live="polite">
+        <span class="dot" id="saveDot"></span>
+        <span id="saveText">Сохранены</span>
+      </div>
+      <button class="start-btn" id="startBtn" onclick="startCode()">▶ Старт</button>
+    </div>
+  </section>
+
+  <!-- Настройки -->
+  <section class="page" id="settings">
+    <div class="top">
+      <div class="bar">
+        <button class="icon-btn" onclick="goBack()">‹</button>
+        <b>Настройки</b>
+        <img class="logo-img" src="8942.jpg" alt="ScriptCode">
+      </div>
+    </div>
+    <div class="content">
+      <div class="section-title">Настройки ScriptCode</div>
+      <div class="card">
+        <div class="settings-row">
+          <span>Анимации</span>
+          <input type="checkbox" id="animations" checked>
+        </div>
+        <div class="settings-row">
+          <span>Автосохранение</span>
+          <input type="checkbox" id="autosave" checked>
+        </div>
+        <div class="settings-row">
+          <span>Интерфейс</span>
+          <span>Голубой</span>
+        </div>
+      </div>
+      <button class="big-btn outline-btn" onclick="goBack()">← Назад</button>
+    </div>
+  </section>
+</div>
 
 <script>
-const screens = [...document.querySelectorAll(".screen")];
-
-function showScreen(id) {
-  screens.forEach(screen =>
-    screen.classList.toggle("active", screen.id === id)
-  );
-}
-
 const $ = id => document.getElementById(id);
 
-let projects = JSON.parse(
-  localStorage.getItem("scriptcode-projects") || "[]"
-);
-
-let files = {
-  "main.py": $("code").value,
-  "game.py": 'print("Игра запускается!")',
-  "utils.py": 'def hello(name):\\n    return f"Привет, {name}!"'
+const starterCode = {
+  "main.py": 'import random\n\nsecret = random.randint(1, 100)\nattempts = 0\n\nprint("Угадай число!")\nprint("Я загадал число от 1 до 100.")\n\nwhile True:\n    guess = input("Твой ответ: ")\n    if not guess.isdigit():\n        print("Введи целое число!")\n        continue\n    guess = int(guess)\n    attempts += 1\n    if guess < secret:\n        print("Моё число больше!")\n    elif guess > secret:\n        print("Моё число меньше!")\n    else:\n        print("Ты угадал!")\n        print("Попыток:", attempts)\n        break\n',
+  "game.py": 'def start_game():\n    print("Игра началась!")\n\nstart_game()\n',
+  "utils.py": 'def greet(name):\n    return f"Привет, {name}!"\n'
 };
 
+let projects = [];
+let currentProject = null;
 let currentFile = "main.py";
-let filesVisible = true;
+let previousPage = "home";
+let saveTimer = null;
+let savingVersion = 0;
+let editorDirty = false;
 
-function toast(message) {
-  $("toast").textContent = message;
-  $("toast").classList.add("show");
+try {
+  projects = JSON.parse(localStorage.getItem("scriptcode_projects") || "[]");
+  if (!Array.isArray(projects)) projects = [];
+} catch { projects = []; }
 
-  setTimeout(() => {
-    $("toast").classList.remove("show");
-  }, 1400);
-}
-
-function saveCurrentFile() {
-  files[currentFile] = $("code").value;
-
-  $("lineCount").textContent =
-    "Строки: " + $("code").value.split("\\n").length;
-
-  $("status").textContent = "● Сохранено в демо";
-}
-
-function toggleDrawer(visible) {
-  filesVisible = visible;
-
-  $("drawer").classList.toggle("hidden", !visible);
-  $("splitter").style.display = visible ? "block" : "none";
-
-  $("toggleFiles").textContent =
-    visible ? "‹ Файлы" : "Файлы ›";
-
-  toast(visible ? "Файлы показаны" : "Файлы скрыты");
-}
-
-function switchFile(name) {
-  saveCurrentFile();
-
-  currentFile = name;
-
-  if (!(name in files)) {
-    files[name] = "# " + name + "\\n";
+function animateIfEnabled() {
+  if (!$("animations").checked) {
+    document.querySelectorAll(".page").forEach(p => p.style.animation = "none");
+  } else {
+    document.querySelectorAll(".page").forEach(p => p.style.animation = "");
   }
-
-  $("code").value = files[name];
-  $("filename").textContent = name;
-
-  document.querySelectorAll("[data-file]").forEach(button => {
-    button.classList.toggle(
-      "selected",
-      button.dataset.file === name
-    );
-  });
-
-  saveCurrentFile();
 }
 
-function refreshProjects() {
-  const list = $("projectList");
-  list.innerHTML = "";
+function showPage(id) {
+  if (id === "settings") previousPage = currentPage();
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  $(id).classList.add("active");
+  animateIfEnabled();
+  if (id === "projects") renderProjects();
+  if (id === "editor") renderEditor();
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
 
-  if (projects.length === 0) {
-    list.textContent = "Пока нет сохранённых проектов.";
+function currentPage() {
+  return document.querySelector(".page.active")?.id || "home";
+}
+function goBack() { showPage(previousPage || "home"); }
+
+function persistProjects() {
+  try {
+    localStorage.setItem("scriptcode_projects", JSON.stringify(projects));
+    return true;
+  } catch {
+    setSaveStatus("Не сохранены", false);
+    return false;
+  }
+}
+
+function createProject() {
+  const name = $("projectName").value.trim() || "Мой проект";
+  const language = $("language").value;
+  if (language !== "Python") {
+    alert("Этот язык появится в будущей версии. Пока доступен Python.");
     return;
   }
+  const project = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+    name,
+    language,
+    files: {...starterCode},
+    updated: new Date().toISOString()
+  };
+  projects.unshift(project);
+  if (!persistProjects()) {
+    projects.shift();
+    return;
+  }
+  currentProject = project;
+  currentFile = "main.py";
+  editorDirty = false;
+  showPage("editor");
+}
 
+function renderProjects() {
+  const list = $("projectList");
+  list.innerHTML = "";
+  if (!projects.length) {
+    list.innerHTML = '<div class="card">Пока нет проектов. Создай свой первый проект!</div>';
+    return;
+  }
   projects.forEach(project => {
     const button = document.createElement("button");
     button.className = "project";
-    button.textContent = "{§}  " + project.name;
-
+    const avatar = document.createElement("img");
+    avatar.className = "logo-img";
+    avatar.src = "8942.jpg";
+    avatar.alt = "";
+    const info = document.createElement("div");
+    info.className = "project-info";
+    const name = document.createElement("div");
+    name.className = "project-name";
+    name.textContent = project.name;
+    const date = document.createElement("div");
+    date.className = "project-date";
+    date.textContent = new Date(project.updated).toLocaleDateString("ru-RU");
+    info.append(name, date);
+    const arrow = document.createElement("span");
+    arrow.className = "arrow";
+    arrow.textContent = "›";
+    button.append(avatar, info, arrow);
     button.onclick = () => {
-      showScreen("editor");
+      currentProject = project;
+      currentFile = Object.keys(project.files)[0] || "main.py";
+      editorDirty = false;
+      showPage("editor");
     };
-
-    list.appendChild(button);
+    list.append(button);
   });
 }
 
-$("newProject").onclick = () => showScreen("create");
+function renderEditor() {
+  if (!currentProject) return;
+  $("editorProjectName").textContent = currentProject.name;
+  renderFileList();
+  $("activeFileName").textContent = currentFile;
+  $("code").value = currentProject.files[currentFile] || "";
+  $("consoleOutput").textContent =
+    "Нажми «Старт», чтобы посмотреть результат.\nЭто HTML-макет, настоящий запуск Python пока не подключён.";
+  setSaveStatus(editorDirty ? "Сохраняются" : "Сохранены", editorDirty);
+}
 
-$("oldProjects").onclick = () => {
-  refreshProjects();
-  showScreen("projects");
-};
+function renderFileList() {
+  const list = $("fileList");
+  list.innerHTML = "";
+  Object.keys(currentProject.files).forEach(file => {
+    const button = document.createElement("button");
+    button.className = "file-btn" + (file === currentFile ? " active" : "");
+    button.textContent = "▤  " + file;
+    button.title = file;
+    button.onclick = () => switchFile(file);
+    list.append(button);
+  });
+}
 
-$("newFromList").onclick = () => showScreen("create");
+function switchFile(file) {
+  if (file === currentFile) return;
+  currentProject.files[currentFile] = $("code").value;
+  currentFile = file;
+  $("activeFileName").textContent = file;
+  $("code").value = currentProject.files[file] || "";
+  renderFileList();
+  scheduleSave();
+}
 
-document.querySelectorAll("[data-home]").forEach(button => {
-  button.onclick = () => showScreen("home");
+function addFile() {
+  if (!currentProject) return;
+  const raw = prompt("Название файла, например extra.py");
+  if (!raw) return;
+  const name = raw.trim();
+  if (!/^[\p{L}\p{N}_ -]+\.py$/u.test(name)) {
+    alert("Используй название с окончанием .py, например extra.py");
+    return;
+  }
+  if (Object.hasOwn(currentProject.files, name)) {
+    alert("Файл с таким именем уже существует.");
+    return;
+  }
+  currentProject.files[currentFile] = $("code").value;
+  currentProject.files[name] = "";
+  currentFile = name;
+  $("activeFileName").textContent = name;
+  $("code").value = "";
+  renderFileList();
+  scheduleSave();
+}
+
+function setSaveStatus(text, saving) {
+  $("saveText").textContent = text;
+  $("saveDot").classList.toggle("saving", !!saving);
+}
+
+function codeChanged() {
+  if (!currentProject) return;
+  currentProject.files[currentFile] = $("code").value;
+  editorDirty = true;
+  setSaveStatus("Сохраняются", true);
+  if (!$("autosave").checked) {
+    setSaveStatus("Есть изменения", true);
+    return;
+  }
+  scheduleSave();
+}
+
+function scheduleSave() {
+  if (!currentProject) return;
+  editorDirty = true;
+  setSaveStatus("Сохраняются", true);
+  clearTimeout(saveTimer);
+  const version = ++savingVersion;
+  saveTimer = setTimeout(() => {
+    if (version !== savingVersion) return;
+    currentProject.files[currentFile] = $("code").value;
+    currentProject.updated = new Date().toISOString();
+    const ok = persistProjects();
+    if (ok) {
+      editorDirty = false;
+      setSaveStatus("Сохранены", false);
+    }
+  }, 450);
+}
+
+function saveNow() {
+  if (!currentProject) return;
+  clearTimeout(saveTimer);
+  currentProject.files[currentFile] = $("code").value;
+  currentProject.updated = new Date().toISOString();
+  const ok = persistProjects();
+  if (ok) {
+    editorDirty = false;
+    setSaveStatus("Сохранены", false);
+  }
+}
+
+function leaveEditor() {
+  saveNow();
+  showPage("projects");
+}
+
+function startCode() {
+  saveNow();
+  $("consoleOutput").textContent =
+    "Макет ScriptCode\n\nИнтерфейс готов к подключению Python.\nСам по себе HTML пока не исполняет Python-код.";
+}
+
+function handleTab(event) {
+  if (event.key === "Tab") {
+    event.preventDefault();
+    const el = event.target;
+    const start = el.selectionStart, end = el.selectionEnd;
+    el.setRangeText("    ", start, end, "end");
+    codeChanged();
+  }
+}
+
+function toggleFiles() {
+  $("filesPanel").classList.toggle("hidden");
+}
+
+const dragbar = $("dragbar");
+let dragStartX = null;
+dragbar.addEventListener("pointerdown", event => {
+  dragStartX = event.clientX;
+  dragbar.setPointerCapture(event.pointerId);
+});
+dragbar.addEventListener("pointerup", event => {
+  if (dragStartX === null) return;
+  const delta = event.clientX - dragStartX;
+  if (delta < -25) $("filesPanel").classList.add("hidden");
+  else if (delta > 25) $("filesPanel").classList.remove("hidden");
+  dragStartX = null;
+});
+dragbar.addEventListener("pointercancel", () => dragStartX = null);
+
+$("autosave").addEventListener("change", () => {
+  if ($("autosave").checked && editorDirty) scheduleSave();
+});
+$("animations").addEventListener("change", animateIfEnabled);
+
+window.addEventListener("beforeunload", () => {
+  if (currentProject && currentPage() === "editor") saveNow();
 });
 
-$("createButton").onclick = () => {
-  const name = $("projectName").value.trim() || "Мой проект";
-
-  projects.push({ name });
-
-  localStorage.setItem(
-    "scriptcode-projects",
-    JSON.stringify(projects)
-  );
-
-  showScreen("editor");
-  toggleDrawer(true);
-  switchFile("main.py");
-};
-
-document.querySelectorAll("[data-file]").forEach(button => {
-  button.onclick = () => switchFile(button.dataset.file);
-});
-
-$("addFile").onclick = () => {
-  let name = prompt("Имя файла, например notes.py");
-
-  if (!name) return;
-
-  if (!name.endsWith(".py")) name += ".py";
-
-  files[name] = "# " + name + "\\n";
-
-  const button = document.createElement("button");
-  button.className = "file";
-  button.dataset.file = name;
-  button.textContent = "▤ " + name;
-
-  button.onclick = () => switchFile(name);
-
-  $("addFile").before(button);
-  switchFile(name);
-};
-
-$("code").addEventListener("input", saveCurrentFile);
-
-$("toggleFiles").onclick = () => {
-  toggleDrawer(!filesVisible);
-};
-
-/* Перетаскивание разделителя файлов */
-
-let startX = null;
-
-$("splitter").addEventListener("pointerdown", event => {
-  startX = event.clientX;
-  $("splitter").setPointerCapture(event.pointerId);
-});
-
-$("splitter").addEventListener("pointerup", event => {
-  if (startX === null) return;
-
-  const difference = event.clientX - startX;
-
-  if (difference < -25) toggleDrawer(false);
-  if (difference > 25) toggleDrawer(true);
-
-  startX = null;
-});
-
-/* Кнопка запуска демонстрации */
-
-$("runButton").onclick = () => {
-  saveCurrentFile();
-
-  $("output").textContent =
-    "▶ Запуск демо\\n\\n" +
-    "Интерфейс работает!\\n" +
-    "Настоящий запуск Python нужно подключить отдельно.";
-
-  toast("Демо запущено");
-};
+renderProjects();
 </script>
-
 </body>
 </html>
